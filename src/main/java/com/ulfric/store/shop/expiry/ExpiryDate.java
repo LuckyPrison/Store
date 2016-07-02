@@ -1,18 +1,18 @@
 package com.ulfric.store.shop.expiry;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class ExpiryDate implements Expiry {
 
-    private Date expiryDate;
+    private Instant expiry;
 
-    public ExpiryDate(Date expiryDate)
+    public ExpiryDate(Instant expiry)
     {
-        this.expiryDate = expiryDate;
+        this.expiry = expiry;
     }
 
     @Override
     public boolean expired() {
-        return new Date().after(expiryDate);
+        return Instant.now().isAfter(expiry);
     }
 }

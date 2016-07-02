@@ -3,7 +3,7 @@ package com.ulfric.store.shop.sales;
 import com.google.common.collect.Lists;
 import com.ulfric.store.shop.StoreAppliable;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 public class Sale {
@@ -13,12 +13,12 @@ public class Sale {
     private DiscountType type;
     private Double magnitude;
 
-    private Date start;
-    private Date finish;
+    private Instant start;
+    private Instant finish;
 
     private List<StoreAppliable> appliables = Lists.newArrayList();
 
-    public Sale(String name, DiscountType type, Double magnitude, Date start, Date finish)
+    public Sale(String name, DiscountType type, Double magnitude, Instant start, Instant finish)
     {
         this.name = name;
         this.type = type;

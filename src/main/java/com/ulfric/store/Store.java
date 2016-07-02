@@ -9,19 +9,7 @@ import java.util.List;
 
 public class Store extends JavaPlugin {
 
-    private List<Manager> managers = Lists.newArrayList(
-            new CommandManager(this),
-            new CategoryManager(this),
-            new PackageManager(this),
-            new CouponManager(this),
-            new SaleManager(this)
-    );
-
-    private CommandManager commandManager;
-    private CategoryManager categoryManager;
-    private PackageManager packageManager;
-    private CouponManager couponManager;
-    private SaleManager saleManager;
+    private List<Manager> managers;
 
     @Override
     public void onEnable()
@@ -29,13 +17,27 @@ public class Store extends JavaPlugin {
         loadManagers();
     }
 
+    @Override
+    public void onDisable()
+    {
+        unloadManagers();
+    }
+
     private void loadManagers()
     {
-        commandManager = new CommandManager(this);
-        categoryManager = new CategoryManager(this);
-        packageManager = new PackageManager(this);
-        couponManager = new CouponManager(this);
-        saleManager = new SaleManager(this);
+        managers = Lists.newArrayList(
+            new CommandManager(this),
+            new CategoryManager(this),
+            new PackageManager(this),
+            new CouponManager(this),
+            new SaleManager(this),
+            new ConfigManager(this)
+        );
+    }
+
+    private void unloadManagers()
+    {
+        managers.forEach(Manager::onDisable);
     }
 
     public <T extends Manager> T getManager(Class<T> type)

@@ -1,6 +1,6 @@
 package com.ulfric.store.shop.expiry;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class ExpiryFactory {
 
@@ -25,9 +25,9 @@ public class ExpiryFactory {
         return new ExpiryNone();
     }
 
-    public Expiry expireAfter(Date date)
+    public Expiry expireAfter(Instant instant)
     {
-        return new ExpiryDate(date);
+        return new ExpiryDate(instant);
     }
 
     public Expiry expireAfter(int uses)
