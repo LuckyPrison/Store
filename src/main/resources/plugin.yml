@@ -1,0 +1,10 @@
+name: ${project.name}
+main: ${project.groupId}.${project.name}
+version: ${project.version}
+
+author: ${project.author}
+website: ${project.website}
+
+database: false
+description: ${project.description}
+load: STARTUP
