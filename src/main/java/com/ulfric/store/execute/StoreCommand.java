@@ -18,11 +18,14 @@ public class StoreCommand {
 
     private boolean executed = false;
 
+    private UUID commandUUID;
+
     public StoreCommand(Store store, String command, CommandType type)
     {
         this.store = store;
         this.command = command;
         this.type = type;
+        this.commandUUID = UUID.randomUUID();
     }
 
     public StoreCommand withDelay(long delay)
@@ -62,6 +65,11 @@ public class StoreCommand {
             return true;
         }
         return false;
+    }
+
+    public UUID getCommandUUID()
+    {
+        return commandUUID;
     }
 
     public boolean canExecute(UUID uuid)

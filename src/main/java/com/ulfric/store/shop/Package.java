@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Package implements StoreAppliable {
 
+    private int id;
     private String title;
     private String description;
     private Category parent;
@@ -16,8 +17,9 @@ public class Package implements StoreAppliable {
 
     private List<StoreCommand> commands = Lists.newArrayList();
 
-    public Package(String title, String description, Category parent, Double price)
+    public Package(int id, String title, String description, Category parent, Double price)
     {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.parent = parent;
@@ -34,6 +36,11 @@ public class Package implements StoreAppliable {
     {
         commands.remove(command);
         return this;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 
     public String getTitle() {

@@ -20,7 +20,7 @@ public class ConfigFile {
 
     public ConfigFile(Store store, String file)
     {
-        this(store, new File(store.getDataFolder(), file + ".yml"));
+        this(store, new File(store.getDataFolder(), file.replace(".yml", "") + ".yml"));
     }
 
     public ConfigFile(Store store, File file)
@@ -78,7 +78,7 @@ public class ConfigFile {
         parts.addAll(
                 config.getConfigurationSection(section).getKeys(false)
                         .stream()
-                        .map(key -> new ConfigPart(config, section + '.' + key))
+                        .map(key -> new ConfigPart(config, section, key))
                         .collect(Collectors.toList())
         );
         return parts.stream();
