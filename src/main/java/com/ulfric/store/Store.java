@@ -26,12 +26,13 @@ public class Store extends JavaPlugin {
     private void loadManagers()
     {
         managers = Lists.newArrayList(
-            new CommandManager(this),
-            new CategoryManager(this),
-            new PackageManager(this),
-            new CouponManager(this),
-            new SaleManager(this),
-            new ConfigManager(this)
+                new CategoryManager(this),
+                new PackageManager(this),
+                new StoreManager(this),
+                new CommandManager(this),
+                new CouponManager(this),
+                new SaleManager(this),
+                new ConfigManager(this)
         );
     }
 

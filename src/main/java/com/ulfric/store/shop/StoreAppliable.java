@@ -18,4 +18,8 @@ public interface StoreAppliable {
         return false;
     }
 
+    int getId();
+
+    void save();
+
 }

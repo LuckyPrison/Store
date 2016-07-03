@@ -19,6 +19,11 @@ public abstract class ListManager<T> extends Manager {
         elements.add(element);
     }
 
+    public void remove(T element)
+    {
+        elements.remove(element);
+    }
+
     public List<T> get()
     {
         return Lists.newArrayList(elements);

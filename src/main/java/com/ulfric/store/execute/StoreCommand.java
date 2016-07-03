@@ -1,12 +1,34 @@
 package com.ulfric.store.execute;
 
 import com.ulfric.store.Store;
+import com.ulfric.store.config.ConfigSerializable;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.UUID;
 
-public class StoreCommand {
+public class StoreCommand implements ConfigSerializable {
+
+    public static void serialize(Store store, StoreCommand command, YamlConfiguration config, String section)
+    {
+        config.set(section + "." + "commands." + command.commandUUID + ".command", command.command);
+        config.set(section + "." + "commands." + command.commandUUID + ".type", command.type);
+        config.set(section + "." + "commands." + command.commandUUID + ".delay", command.delay);
+        config.set(section + "." + "commands." + command.commandUUID + ".require-online", command.requireOnline);
+    }
+
+    public static StoreCommand deserialize(Store store, YamlConfiguration config, UUID uuid, String section)
+    {
+        StoreCommand command = new StoreCommand(
+                store,
+                config.getString(section + "." + "commands." + uuid + ".command"),
+                CommandType.valueOf(config.getString(section + "." + "commands." + uuid + ".type"))
+        );
+        command.withDelay(config.getLong(section + "." + "commands." + uuid + ".delay"));
+        command.withRequireOnline(config.getBoolean(section + "." + "commands." + uuid + ".require-online"));
+        return command;
+    }
 
     private final Store store;
 

@@ -4,15 +4,21 @@ import com.ulfric.store.Store;
 import com.ulfric.store.config.ConfigFile;
 import com.ulfric.store.execute.CommandType;
 import com.ulfric.store.execute.StoreCommand;
+import com.ulfric.store.shop.Category;
+import com.ulfric.store.shop.Package;
 import com.ulfric.store.shop.Transaction;
+import com.ulfric.store.shop.sales.Coupon;
+import com.ulfric.store.shop.sales.Sale;
 
 import java.util.UUID;
 
 public class ConfigManager extends Manager {
 
+    private ConfigFile storeConfig;
     private ConfigFile transactionConfig;
     private ConfigFile commandConfig;
-    private ConfigFile storeConfig;
+    private ConfigFile saleConfig;
+    private ConfigFile couponConfig;
 
     public ConfigManager(Store store)
     {
@@ -23,19 +29,60 @@ public class ConfigManager extends Manager {
     private void load()
     {
         loadConfigs();
+        loadStore();
         loadTransactions();
         loadCommands();
-        loadCategories();
-        loadPackages();
         loadCoupons();
         loadSales();
     }
 
     private void loadConfigs()
     {
+        storeConfig = new ConfigFile(store, "store");
         transactionConfig = new ConfigFile(store, "transactions");
         commandConfig = new ConfigFile(store, "commandqueue");
-        storeConfig = new ConfigFile(store, "store");
+        saleConfig = new ConfigFile(store, "sales");
+        couponConfig = new ConfigFile(store, "coupons");
+    }
+
+    private void loadStore()
+    {
+        loadCategories();
+        loadPackages();
+    }
+
+    private void loadCategories()
+    {
+        StoreManager storeManager = store.getManager(StoreManager.class);
+        storeConfig.getParts("categories").forEach(part ->
+        {
+            int id = Integer.parseInt(part.getKey());
+            Category category = Category.deserialize(store, storeConfig.getConfig(), id);
+            storeManager.addItem(category);
+        });
+    }
+
+    public void saveCategory(Category category)
+    {
+        Category.serialize(store, category, storeConfig.getConfig());
+        saveStore(true);
+    }
+
+    private void loadPackages()
+    {
+        StoreManager storeManager = store.getManager(StoreManager.class);
+        storeConfig.getParts("packages").forEach(part ->
+        {
+            int id = Integer.parseInt(part.getKey());
+            Package pack = Package.deserialize(store, storeConfig.getConfig(), id);
+            storeManager.addItem(pack);
+        });
+    }
+
+    public void savePackage(Package pack)
+    {
+        Package.serialize(store, pack, storeConfig.getConfig());
+        saveStore(true);
     }
 
     private void loadTransactions()
@@ -69,24 +116,36 @@ public class ConfigManager extends Manager {
         });
     }
 
-    private void loadCategories()
-    {
-
-    }
-
-    private void loadPackages()
-    {
-
-    }
-
     private void loadCoupons()
     {
+        CouponManager couponManager = store.getManager(CouponManager.class);
+        couponConfig.getParts("coupons").forEach(part ->
+        {
+            Coupon coupon = Coupon.deserialize(store, couponConfig.getConfig(), part.getKey());
+            couponManager.add(coupon, false);
+        });
+    }
 
+    public void newCoupon(Coupon coupon)
+    {
+        Coupon.serialize(store, coupon, couponConfig.getConfig());
+        saveCoupons(true);
     }
 
     private void loadSales()
     {
+        SaleManager saleManager = store.getManager(SaleManager.class);
+        saleConfig.getParts("sales").forEach(part ->
+        {
+            Sale sale = Sale.deserialize(store, saleConfig.getConfig(), part.getKey());
+            saleManager.add(sale, false);
+        });
+    }
 
+    public void newSale(Sale sale)
+    {
+        Sale.serialize(store, sale, saleConfig.getConfig());
+        saveSales(true);
     }
 
     public void newCommand(UUID uuid, StoreCommand storeCommand)
@@ -123,6 +182,16 @@ public class ConfigManager extends Manager {
     public void saveTransactions(boolean async)
     {
         transactionConfig.save(async);
+    }
+
+    public void saveSales(boolean async)
+    {
+        saleConfig.save(async);
+    }
+
+    public void saveCoupons(boolean async)
+    {
+        couponConfig.save(async);
     }
 
 }

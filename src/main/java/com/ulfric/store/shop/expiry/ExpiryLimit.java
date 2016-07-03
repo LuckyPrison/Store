@@ -16,7 +16,7 @@ public class ExpiryLimit implements Expiry {
         this.current = current;
     }
 
-    public void increment()
+    public void onUse()
     {
         current++;
     }
@@ -24,6 +24,16 @@ public class ExpiryLimit implements Expiry {
     @Override
     public boolean expired() {
         return current >= limit;
+    }
+
+    public int getLimit()
+    {
+        return limit;
+    }
+
+    public int getCurrent()
+    {
+        return current;
     }
 
 }

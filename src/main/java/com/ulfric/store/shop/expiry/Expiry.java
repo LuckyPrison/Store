@@ -4,4 +4,6 @@ public interface Expiry {
 
     boolean expired();
 
+    default void onUse() {}
+
 }

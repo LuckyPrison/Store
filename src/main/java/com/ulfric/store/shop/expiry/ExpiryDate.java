@@ -15,4 +15,10 @@ public class ExpiryDate implements Expiry {
     public boolean expired() {
         return Instant.now().isAfter(expiry);
     }
+
+    public Instant getExpiry()
+    {
+        return expiry;
+    }
+
 }
