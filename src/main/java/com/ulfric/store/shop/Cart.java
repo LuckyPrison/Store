@@ -1,8 +1,13 @@
 package com.ulfric.store.shop;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.ulfric.store.Store;
+import com.ulfric.store.manage.SaleManager;
 import com.ulfric.store.shop.sales.Coupon;
+import com.ulfric.store.shop.sales.CouponType;
+import com.ulfric.store.shop.sales.DiscountType;
+import com.ulfric.store.shop.sales.Sale;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.entity.Player;
 
@@ -66,9 +71,80 @@ public class Cart {
         return price;
     }
 
+    /**
+     * See TODO
+     *
+     * @return fuck
+     */
     public double calculateFinalCost()
     {
+        double total = calculateCost();
 
+        List<Package> packagesSorted = Lists.newArrayList(packages);
+
+        packagesSorted.sort((a, b) -> Double.compare(a.getPrice(), b.getPrice()));
+
+        List<Coupon> couponsSorted = Lists.newArrayList(appliedCoupons);
+
+        couponsSorted.sort((a, b) ->
+        {
+            return ComparisonChain.start()
+                    .compareTrueFirst(
+                            a.getCouponType() == CouponType.PACKAGE || a.getCouponType() == CouponType.CATEGORY,
+                            b.getCouponType() == CouponType.PACKAGE || b.getCouponType() == CouponType.CATEGORY
+                    )
+                    .compareTrueFirst(
+                            a.getDiscountType() == DiscountType.AMOUNT,
+                            b.getDiscountType() == DiscountType.AMOUNT
+                    )
+                    .result();
+        });
+
+        for (Coupon coupon : couponsSorted)
+        {
+            switch (coupon.getCouponType())
+            {
+                case PACKAGE:
+                case CATEGORY:
+                    for (Package pack : packagesSorted)
+                    {
+                        if (coupon.appliesFor(pack))
+                        {
+                            switch (coupon.getDiscountType())
+                            {
+                                case AMOUNT:
+                                    total -= Math.min(pack.getPrice(), coupon.getMagnitude());
+                                    break;
+                                case PERCENTAGE:
+                                    total -= Math.min(pack.getPrice(), (coupon.getMagnitude() / 100) * pack.getPrice());
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                case CART:
+                    switch (coupon.getDiscountType())
+                    {
+                        case AMOUNT:
+                            total -= Math.min(total, coupon.getMagnitude());
+                            break;
+                        case PERCENTAGE:
+                            total -= Math.min(total, (coupon.getMagnitude() / 100) * total);
+                    }
+            }
+        }
+
+        for (Sale sale : store.getManager(SaleManager.class).getSales())
+        {
+            for (Package pack : packagesSorted)
+            {
+                // Bleh my face when I realise I should have made a generic discount class
+                // Welp that's on the TODO list
+            }
+        }
+
+        return total;
     }
 
     public String getCartId()

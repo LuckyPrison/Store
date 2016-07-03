@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Coupon implements ConfigSerializable {
+public class Coupon implements ConfigSerializable, Discountable {
 
     public static void serialize(Store store, Coupon coupon, YamlConfiguration config)
     {
@@ -75,6 +75,11 @@ public class Coupon implements ConfigSerializable {
     {
         appliables.remove(appliable);
         return this;
+    }
+
+    public boolean appliesFor(StoreAppliable appliable)
+    {
+        return appliables.stream().filter(appliable::appliableTo).findAny().isPresent();
     }
 
     public String getCode() {

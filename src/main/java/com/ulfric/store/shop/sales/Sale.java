@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class Sale implements ConfigSerializable {
+public class Sale implements ConfigSerializable, Discountable {
 
     public static void serialize(Store store, Sale sale, YamlConfiguration config)
     {

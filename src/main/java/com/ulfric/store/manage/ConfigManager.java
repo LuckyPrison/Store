@@ -36,6 +36,16 @@ public class ConfigManager extends Manager {
         loadSales();
     }
 
+    @Override
+    public void onDisable()
+    {
+        saveCommands(false);
+        saveTransactions(false);
+        saveStore(false);
+        saveSales(false);
+        saveCoupons(false);
+    }
+
     private void loadConfigs()
     {
         storeConfig = new ConfigFile(store, "store");
