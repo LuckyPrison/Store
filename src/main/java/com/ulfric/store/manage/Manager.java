@@ -11,6 +11,11 @@ public abstract class Manager {
         this.store = store;
     }
 
+    public void onEnable()
+    {
+
+    }
+
     public void onDisable()
     {
 

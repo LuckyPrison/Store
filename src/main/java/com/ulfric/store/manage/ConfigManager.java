@@ -24,6 +24,11 @@ public class ConfigManager extends Manager {
     public ConfigManager(Store store)
     {
         super(store);
+    }
+
+    @Override
+    public void onEnable()
+    {
         load();
     }
 
@@ -133,7 +138,7 @@ public class ConfigManager extends Manager {
                     part.getSection(),
                     UUID.fromString(part.getKey())
             );
-            transactionManager.newTransaction(transaction);
+            transactionManager.newTransaction(transaction, false);
         });
     }
 
@@ -148,7 +153,10 @@ public class ConfigManager extends Manager {
                             store,
                             part.getString("command"),
                             CommandType.valueOf(part.getString("type"))
-                    )
+                    ).withRequireOnline(part.getBoolean("require-online"))
+                     .withDelay(part.getInt("delay"))
+                     .withCommandUUID(UUID.fromString(part.getKey())),
+                    false
             );
         });
     }
@@ -188,9 +196,11 @@ public class ConfigManager extends Manager {
     public void newCommand(UUID uuid, StoreCommand storeCommand)
     {
         UUID key = storeCommand.getCommandUUID();
-        commandConfig.getConfig().set("queue." + key + ".uuid", uuid);
+        commandConfig.getConfig().set("queue." + key + ".uuid", uuid.toString());
         commandConfig.getConfig().set("queue." + key + ".command", storeCommand.getCommand());
-        commandConfig.getConfig().set("queue." + key + ".type", storeCommand.getType());
+        commandConfig.getConfig().set("queue." + key + ".type", storeCommand.getType().toString());
+        commandConfig.getConfig().set("queue." + key + ".delay", storeCommand.getDelay());
+        commandConfig.getConfig().set("queue." + key + ".require-online", storeCommand.isRequireOnline());
         saveCommands(true);
     }
 

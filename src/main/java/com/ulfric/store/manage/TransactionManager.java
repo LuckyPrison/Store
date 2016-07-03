@@ -10,10 +10,13 @@ public class TransactionManager extends ListManager<Transaction> {
         super(store);
     }
 
-    public void newTransaction(Transaction transaction)
+    public void newTransaction(Transaction transaction, boolean newTransaction)
     {
         this.add(transaction);
-        store.getManager(ConfigManager.class).saveTransaction(transaction);
+        if (newTransaction)
+        {
+            store.getManager(ConfigManager.class).saveTransaction(transaction);
+        }
     }
 
     public void executeTransaction(Transaction transaction)

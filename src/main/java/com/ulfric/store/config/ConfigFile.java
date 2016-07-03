@@ -16,6 +16,7 @@ public class ConfigFile {
 
     private YamlConfiguration config;
     private File file;
+
     private final Object lock = new Object();
 
     public ConfigFile(Store store, String file)

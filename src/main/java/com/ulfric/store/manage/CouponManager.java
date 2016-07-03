@@ -21,6 +21,11 @@ public class CouponManager extends ListManager<Coupon> {
         }
     }
 
+    public Coupon byCode(String code)
+    {
+        return get().stream().filter(coupon -> coupon.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
+    }
+
     public void remove(Coupon coupon)
     {
         super.remove(coupon);

@@ -3,6 +3,7 @@ package com.ulfric.store.shop.sales;
 import com.google.common.collect.Lists;
 import com.ulfric.store.Store;
 import com.ulfric.store.config.ConfigSerializable;
+import com.ulfric.store.manage.CouponManager;
 import com.ulfric.store.manage.StoreManager;
 import com.ulfric.store.shop.StoreAppliable;
 import com.ulfric.store.shop.expiry.Expiry;
@@ -30,6 +31,7 @@ public class Coupon implements ConfigSerializable {
     public static Coupon deserialize(Store store, YamlConfiguration config, String code)
     {
         Coupon coupon = new Coupon(
+                store,
                 code,
                 CouponType.valueOf(config.getString("coupons." + code + ".type.coupon")),
                 DiscountType.valueOf(config.getString("coupons." + code + ".type.discount")),
@@ -44,6 +46,7 @@ public class Coupon implements ConfigSerializable {
         return coupon;
     }
 
+    private final Store store;
     private String code;
     private Expiry expiry;
 
@@ -55,8 +58,9 @@ public class Coupon implements ConfigSerializable {
 
     private List<StoreAppliable> appliables = Lists.newArrayList();
 
-    public Coupon(String code, CouponType couponType, DiscountType discountType, Double magnitude, Expiry expiry, Double minValue)
+    public Coupon(Store store, String code, CouponType couponType, DiscountType discountType, Double magnitude, Expiry expiry, Double minValue)
     {
+        this.store = store;
         this.code = code;
         this.couponType = couponType;
         this.discountType = discountType;
@@ -80,6 +84,11 @@ public class Coupon implements ConfigSerializable {
     public boolean appliesFor(StoreAppliable appliable)
     {
         return appliables.stream().filter(appliable::appliableTo).findAny().isPresent();
+    }
+
+    public void save()
+    {
+        store.getManager(CouponManager.class).add(this, true);
     }
 
     public String getCode() {
@@ -107,5 +116,10 @@ public class Coupon implements ConfigSerializable {
     public DiscountType getDiscountType()
     {
         return discountType;
+    }
+
+    public List<StoreAppliable> getAppliables()
+    {
+        return Lists.newArrayList(appliables);
     }
 }

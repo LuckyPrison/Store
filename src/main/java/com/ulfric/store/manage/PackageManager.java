@@ -20,7 +20,7 @@ public class PackageManager extends ListManager<Package> {
     public void execute(Package item, UUID uuid)
     {
         item.getCommands().forEach(command ->
-                store.getManager(CommandManager.class).addToQueue(uuid, command));
+                store.getManager(CommandManager.class).addToQueue(uuid, command, true));
     }
 
 }

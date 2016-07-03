@@ -89,6 +89,12 @@ public class StoreCommand implements ConfigSerializable {
         return false;
     }
 
+    public StoreCommand withCommandUUID(UUID uuid)
+    {
+        this.commandUUID = uuid;
+        return this;
+    }
+
     public UUID getCommandUUID()
     {
         return commandUUID;

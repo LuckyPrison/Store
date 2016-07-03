@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Sale implements ConfigSerializable {
@@ -21,6 +20,7 @@ public class Sale implements ConfigSerializable {
         config.set("sales." + sale.name + ".magnitude", sale.magnitude);
         config.set("sales." + sale.name + ".start", sale.start.toString());
         config.set("sales." + sale.name + ".finish", sale.finish.toString());
+        config.set("sales." + sale.name + ".global", sale.global);
         config.set(
                 "sales." + sale.name + ".applications",
                 sale.appliables.stream().map(StoreAppliable::getId).collect(Collectors.toList())
@@ -35,13 +35,12 @@ public class Sale implements ConfigSerializable {
                 DiscountType.valueOf(config.getString("sales." + name + ".type")),
                 config.getDouble("sales." + name + ".magnitude"),
                 Instant.parse(config.getString("sales." + name + ".start")),
-                Instant.parse(config.getString("sales." + name + ".finish"))
+                Instant.parse(config.getString("sales." + name + ".finish")),
+                config.getBoolean("sales." + name + ".global")
         );
         config.getIntegerList("sales." + name + ".applications").stream().map(id -> store.getManager(StoreManager.class).getById(id)).forEach(sale::applyFor);
         return sale;
     }
-
-    private UUID saleUUID;
 
     private final Store store;
 
@@ -55,7 +54,9 @@ public class Sale implements ConfigSerializable {
 
     private List<StoreAppliable> appliables = Lists.newArrayList();
 
-    public Sale(Store store, String name, DiscountType type, Double magnitude, Instant start, Instant finish)
+    private boolean global;
+
+    public Sale(Store store, String name, DiscountType type, Double magnitude, Instant start, Instant finish, boolean global)
     {
         this.store = store;
         this.name = name;
@@ -63,11 +64,7 @@ public class Sale implements ConfigSerializable {
         this.magnitude = magnitude;
         this.start = start;
         this.finish = finish;
-    }
-
-    public void activate()
-    {
-        store.getManager(SaleManager.class).add(this, true);
+        this.global = global;
     }
 
     public String getName()
@@ -97,11 +94,20 @@ public class Sale implements ConfigSerializable {
         return this;
     }
 
+    public void save()
+    {
+        store.getManager(SaleManager.class).add(this, true);
+    }
+
     public boolean validFor(StoreAppliable appliable)
     {
         if (Instant.now().isBefore(start) || Instant.now().isAfter(finish))
         {
             return false;
+        }
+        if (global)
+        {
+            return true;
         }
         for (StoreAppliable poss : appliables)
         {
@@ -111,6 +117,26 @@ public class Sale implements ConfigSerializable {
             }
         }
         return false;
+    }
+
+    public Instant getStart()
+    {
+        return start;
+    }
+
+    public Instant getFinish()
+    {
+        return finish;
+    }
+
+    public List<StoreAppliable> getAppliables()
+    {
+        return Lists.newArrayList(appliables);
+    }
+
+    public boolean isGlobal()
+    {
+        return global;
     }
 
 }

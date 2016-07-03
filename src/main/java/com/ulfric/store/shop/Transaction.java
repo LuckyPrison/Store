@@ -3,10 +3,13 @@ package com.ulfric.store.shop;
 import com.google.common.collect.Lists;
 import com.ulfric.store.Store;
 import com.ulfric.store.config.ConfigSerializable;
+import com.ulfric.store.manage.LogManager;
 import com.ulfric.store.manage.PackageManager;
 import com.ulfric.store.manage.TransactionManager;
+import com.ulfric.store.util.StoreUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,7 +19,7 @@ public class Transaction implements ConfigSerializable {
     public static void serialize(Transaction transaction, YamlConfiguration config, String key)
     {
         config.set(key + transaction.transactionId + ".executed", transaction.executed);
-        config.set(key + transaction.transactionId + ".for", transaction.playerFor);
+        config.set(key + transaction.transactionId + ".for", transaction.playerFor.toString());
         config.set(
                 key + transaction.transactionId + ".packages",
                 transaction.items.stream().map(Package::getId).collect(Collectors.toList())
@@ -52,11 +55,12 @@ public class Transaction implements ConfigSerializable {
         this.transactionId = UUID.randomUUID();
         this.playerFor = playerFor;
         this.items = items;
+        load();
     }
 
     public void load()
     {
-        store.getManager(TransactionManager.class).newTransaction(this);
+        store.getManager(TransactionManager.class).newTransaction(this, true);
     }
 
     public void execute()
@@ -65,8 +69,20 @@ public class Transaction implements ConfigSerializable {
         {
             return;
         }
+        log();
         store.getManager(TransactionManager.class).executeTransaction(this);
         this.executed = true;
+    }
+
+    private void log()
+    {
+        LogManager log = store.getManager(LogManager.class);
+        YamlConfiguration config = log.getTransactionLog().getConfig();
+
+        config.set(transactionId + ".for", playerFor.toString());
+        config.set(transactionId + ".instant", StoreUtils.readableTimestamp(Instant.now()));
+        config.set(transactionId + ".packages", getPackages().stream().map(pack -> pack.getTitle() + ":" + pack.getId()).collect(Collectors.toList()));
+        log.getTransactionLog().save(true);
     }
 
     public UUID getTransactionId()
