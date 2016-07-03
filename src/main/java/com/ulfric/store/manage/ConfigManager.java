@@ -4,6 +4,7 @@ import com.ulfric.store.Store;
 import com.ulfric.store.config.ConfigFile;
 import com.ulfric.store.execute.CommandType;
 import com.ulfric.store.execute.StoreCommand;
+import com.ulfric.store.factory.StoreFactory;
 import com.ulfric.store.shop.Category;
 import com.ulfric.store.shop.Package;
 import com.ulfric.store.shop.Transaction;
@@ -57,23 +58,42 @@ public class ConfigManager extends Manager {
 
     private void loadStore()
     {
+        loadIds();
         loadCategories();
         loadPackages();
+    }
+
+    private void loadIds()
+    {
+        store.setStoreFactory(new StoreFactory(store, storeConfig.getConfig().getInt("current-id", 0)));
+    }
+
+    public void incrementId(int id)
+    {
+        storeConfig.getConfig().set("current-id", id);
+        saveStore(true);
     }
 
     private void loadCategories()
     {
         StoreManager storeManager = store.getManager(StoreManager.class);
+        CategoryManager categoryManager = store.getManager(CategoryManager.class);
         storeConfig.getParts("categories").forEach(part ->
         {
             int id = Integer.parseInt(part.getKey());
             Category category = Category.deserialize(store, storeConfig.getConfig(), id);
             storeManager.addItem(category);
+            categoryManager.add(category);
         });
     }
 
     public void saveCategory(Category category)
     {
+        CategoryManager categoryManager = store.getManager(CategoryManager.class);
+        if (!categoryManager.get().contains(category))
+        {
+            categoryManager.add(category);
+        }
         Category.serialize(store, category, storeConfig.getConfig());
         saveStore(true);
     }
@@ -81,16 +101,23 @@ public class ConfigManager extends Manager {
     private void loadPackages()
     {
         StoreManager storeManager = store.getManager(StoreManager.class);
+        PackageManager packageManager = store.getManager(PackageManager.class);
         storeConfig.getParts("packages").forEach(part ->
         {
             int id = Integer.parseInt(part.getKey());
             Package pack = Package.deserialize(store, storeConfig.getConfig(), id);
             storeManager.addItem(pack);
+            packageManager.add(pack);
         });
     }
 
     public void savePackage(Package pack)
     {
+        PackageManager packageManager = store.getManager(PackageManager.class);
+        if (!packageManager.get().contains(pack))
+        {
+            packageManager.add(pack);
+        }
         Package.serialize(store, pack, storeConfig.getConfig());
         saveStore(true);
     }

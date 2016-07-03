@@ -1,10 +1,10 @@
-name: ${project.name}
-main: ${project.groupId}.${project.name}
-version: ${project.version}
+name: Store
+main: com.ulfric.store.Store
+version: 1.0
 
-author: ${project.author}
-website: ${project.website}
+author: LuckyPrison
+website: http://ulfric.com
 
 database: false
-description: ${project.description}
+description: Store for LuckyPrison
 load: STARTUP

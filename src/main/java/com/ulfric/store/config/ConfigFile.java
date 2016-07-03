@@ -31,6 +31,7 @@ public class ConfigFile {
         {
             try
             {
+                System.out.println("Creating file " + file.toString());
                 file.createNewFile();
             }
             catch (IOException e)

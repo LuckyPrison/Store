@@ -21,7 +21,7 @@
     </properties>
 
     <build>
-        <defaultGoal>clean compile assembly:single</defaultGoal>
+        <defaultGoal>clean compile install assembly:single</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>

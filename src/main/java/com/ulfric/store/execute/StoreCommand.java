@@ -13,7 +13,7 @@ public class StoreCommand implements ConfigSerializable {
     public static void serialize(Store store, StoreCommand command, YamlConfiguration config, String section)
     {
         config.set(section + "." + "commands." + command.commandUUID + ".command", command.command);
-        config.set(section + "." + "commands." + command.commandUUID + ".type", command.type);
+        config.set(section + "." + "commands." + command.commandUUID + ".type", command.type.toString());
         config.set(section + "." + "commands." + command.commandUUID + ".delay", command.delay);
         config.set(section + "." + "commands." + command.commandUUID + ".require-online", command.requireOnline);
     }

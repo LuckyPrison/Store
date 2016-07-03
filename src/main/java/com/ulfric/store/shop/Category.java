@@ -1,5 +1,6 @@
 package com.ulfric.store.shop;
 
+import com.google.common.collect.Lists;
 import com.ulfric.store.Store;
 import com.ulfric.store.config.ConfigSerializable;
 import com.ulfric.store.manage.ConfigManager;
@@ -31,7 +32,7 @@ public class Category implements StoreAppliable, ConfigSerializable {
     private final Store store;
     private final int id;
     private String title;
-    private List<Integer> packages;
+    private List<Integer> packages = Lists.newArrayList();
 
     public Category(Store store, int id, String title)
     {
@@ -50,6 +51,11 @@ public class Category implements StoreAppliable, ConfigSerializable {
     {
         packages.remove(item);
         return this;
+    }
+
+    public String getTitle()
+    {
+        return title;
     }
 
     public List<Package> getPackages()

@@ -1,13 +1,8 @@
 package com.ulfric.store.shop;
 
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.ulfric.store.Store;
-import com.ulfric.store.manage.SaleManager;
-import com.ulfric.store.shop.sales.Coupon;
-import com.ulfric.store.shop.sales.CouponType;
-import com.ulfric.store.shop.sales.DiscountType;
-import com.ulfric.store.shop.sales.Sale;
+import com.ulfric.store.shop.sales.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.entity.Player;
 
@@ -15,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class Cart {
+public class Cart implements Discountable {
 
     private static final int ID_LENGTH = 16;
 
@@ -26,9 +21,10 @@ public class Cart {
     private Player owner;
 
     private List<UUID> purchaseFor = Lists.newArrayList();
-    private List<Package> packages = Lists.newArrayList();
+    private List<PurchasePackage> packages = Lists.newArrayList();
 
-    private List<Coupon> appliedCoupons = Lists.newArrayList();
+    private List<Coupon> cartCoupons = Lists.newArrayList();
+    private Discount cartDiscount;
 
     public Cart(Store store, Player player)
     {
@@ -57,92 +53,70 @@ public class Cart {
 
     public Cart withPackage(Package item)
     {
-        this.packages.add(item);
+        this.packages.add(new PurchasePackage(store, item));
         return this;
+    }
+
+    public boolean applyCoupon(Coupon coupon)
+    {
+        if (coupon.getCouponType() == CouponType.CART)
+        {
+            this.cartCoupons.add(coupon);
+            return true;
+        }
+        else
+        {
+            List<PurchasePackage> packagesSorted = Lists.newArrayList(packages);
+            packagesSorted.sort((a, b) -> Double.compare(a.getPack().getPrice(), b.getPack().getPrice()));
+
+            for (PurchasePackage pack : packagesSorted)
+            {
+                if (pack.applyCoupon(coupon))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
     public double calculateCost()
     {
         double price = 0;
-        for (Package item : packages)
+        for (PurchasePackage item : packages)
         {
-            price += (item.getPrice() * purchaseFor.size());
+            price += (item.getPack().getPrice() * purchaseFor.size());
         }
         return price;
     }
 
-    /**
-     * See TODO
-     *
-     * @return fuck
-     */
     public double calculateFinalCost()
     {
-        double total = calculateCost();
+        double total = 0.0;
 
-        List<Package> packagesSorted = Lists.newArrayList(packages);
-
-        packagesSorted.sort((a, b) -> Double.compare(a.getPrice(), b.getPrice()));
-
-        List<Coupon> couponsSorted = Lists.newArrayList(appliedCoupons);
-
-        couponsSorted.sort((a, b) ->
+        for (PurchasePackage pack : packages)
         {
-            return ComparisonChain.start()
-                    .compareTrueFirst(
-                            a.getCouponType() == CouponType.PACKAGE || a.getCouponType() == CouponType.CATEGORY,
-                            b.getCouponType() == CouponType.PACKAGE || b.getCouponType() == CouponType.CATEGORY
-                    )
-                    .compareTrueFirst(
-                            a.getDiscountType() == DiscountType.AMOUNT,
-                            b.getDiscountType() == DiscountType.AMOUNT
-                    )
-                    .result();
+            total += pack.getDiscountedPrice();
+        }
+
+        this.cartDiscount = new Discount(total);
+
+        List<Coupon> sortedCartCoupons = Lists.newArrayList(cartCoupons);
+
+        sortedCartCoupons.sort((a, b) ->
+        {
+            if (a.getDiscountType() == DiscountType.AMOUNT) return 1;
+            if (b.getDiscountType() == DiscountType.AMOUNT) return -1;
+            return 0;
         });
 
-        for (Coupon coupon : couponsSorted)
+        sortedCartCoupons.forEach(coupon ->
         {
-            switch (coupon.getCouponType())
-            {
-                case PACKAGE:
-                case CATEGORY:
-                    for (Package pack : packagesSorted)
-                    {
-                        if (coupon.appliesFor(pack))
-                        {
-                            switch (coupon.getDiscountType())
-                            {
-                                case AMOUNT:
-                                    total -= Math.min(pack.getPrice(), coupon.getMagnitude());
-                                    break;
-                                case PERCENTAGE:
-                                    total -= Math.min(pack.getPrice(), (coupon.getMagnitude() / 100) * pack.getPrice());
-                                    break;
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                case CART:
-                    switch (coupon.getDiscountType())
-                    {
-                        case AMOUNT:
-                            total -= Math.min(total, coupon.getMagnitude());
-                            break;
-                        case PERCENTAGE:
-                            total -= Math.min(total, (coupon.getMagnitude() / 100) * total);
-                    }
-            }
-        }
+            cartDiscount.withCoupon(coupon);
+        });
 
-        for (Sale sale : store.getManager(SaleManager.class).getSales())
-        {
-            for (Package pack : packagesSorted)
-            {
-                // Bleh my face when I realise I should have made a generic discount class
-                // Welp that's on the TODO list
-            }
-        }
+        total = cartDiscount.getCalculatedPrice();
 
         return total;
     }
@@ -162,7 +136,7 @@ public class Cart {
         return Lists.newArrayList(purchaseFor);
     }
 
-    public List<Package> getPackages()
+    public List<PurchasePackage> getPackages()
     {
         return Lists.newArrayList(packages);
     }
@@ -175,8 +149,25 @@ public class Cart {
                 cartId,
                 owner.getUniqueId(),
                 purchaseFor.stream().map(UUID::toString).collect(Collectors.joining()),
-                packages.stream().map(Package::toString).collect(Collectors.joining())
+                packages.stream().map(pack -> pack.getPack().getTitle()).collect(Collectors.joining())
         );
     }
 
+    @Override
+    public List<Discount> getDiscounts()
+    {
+        return null;
+    }
+
+    @Override
+    public double getDiscountOff()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getDiscountedPrice()
+    {
+        return 0;
+    }
 }

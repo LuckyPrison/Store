@@ -12,13 +12,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Coupon implements ConfigSerializable, Discountable {
+public class Coupon implements ConfigSerializable {
 
     public static void serialize(Store store, Coupon coupon, YamlConfiguration config)
     {
         config.set("coupons." + coupon.code + ".magnitude", coupon.magnitude);
-        config.set("coupons." + coupon.code + ".type.coupon", coupon.couponType);
-        config.set("coupons." + coupon.code + ".type.discount", coupon.discountType);
+        config.set("coupons." + coupon.code + ".type.coupon", coupon.couponType.toString());
+        config.set("coupons." + coupon.code + ".type.discount", coupon.discountType.toString());
         config.set("coupons." + coupon.code + ".min-value", coupon.minValue);
         config.set(
                 "coupons." + coupon.code + ".appliables",

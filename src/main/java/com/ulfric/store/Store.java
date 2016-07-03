@@ -1,6 +1,7 @@
 package com.ulfric.store;
 
 import com.google.common.collect.Lists;
+import com.ulfric.store.factory.StoreFactory;
 import com.ulfric.store.manage.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,10 +11,12 @@ import java.util.List;
 public class Store extends JavaPlugin {
 
     private List<Manager> managers;
+    private StoreFactory storeFactory;
 
     @Override
     public void onEnable()
     {
+        getDataFolder().mkdirs();
         loadManagers();
     }
 
@@ -25,15 +28,16 @@ public class Store extends JavaPlugin {
 
     private void loadManagers()
     {
-        managers = Lists.newArrayList(
-                new CategoryManager(this),
-                new PackageManager(this),
-                new StoreManager(this),
-                new CommandManager(this),
-                new CouponManager(this),
-                new SaleManager(this),
-                new ConfigManager(this)
-        );
+        managers = Lists.newArrayList();
+
+        managers.add(new StoreManager(this));
+        managers.add(new CategoryManager(this));
+        managers.add(new PackageManager(this));
+        managers.add(new CommandManager(this));
+        managers.add(new TransactionManager(this));
+        managers.add(new CouponManager(this));
+        managers.add(new SaleManager(this));
+        managers.add(new ConfigManager(this));
     }
 
     private void unloadManagers()
@@ -64,4 +68,13 @@ public class Store extends JavaPlugin {
         return null;
     }
 
+    public StoreFactory getStoreFactory()
+    {
+        return storeFactory;
+    }
+
+    public void setStoreFactory(StoreFactory storeFactory)
+    {
+        this.storeFactory = storeFactory;
+    }
 }

@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class Sale implements ConfigSerializable, Discountable {
+public class Sale implements ConfigSerializable {
 
     public static void serialize(Store store, Sale sale, YamlConfiguration config)
     {
-        config.set("sales." + sale.name + ".type", sale.type);
+        config.set("sales." + sale.name + ".type", sale.type.toString());
         config.set("sales." + sale.name + ".magnitude", sale.magnitude);
         config.set("sales." + sale.name + ".start", sale.start.toString());
         config.set("sales." + sale.name + ".finish", sale.finish.toString());
@@ -70,6 +70,21 @@ public class Sale implements ConfigSerializable, Discountable {
         store.getManager(SaleManager.class).add(this, true);
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public DiscountType getType()
+    {
+        return type;
+    }
+
+    public Double getMagnitude()
+    {
+        return magnitude;
+    }
+
     public Sale applyFor(StoreAppliable appliable)
     {
         appliables.add(appliable);
@@ -84,6 +99,10 @@ public class Sale implements ConfigSerializable, Discountable {
 
     public boolean validFor(StoreAppliable appliable)
     {
+        if (Instant.now().isBefore(start) || Instant.now().isAfter(finish))
+        {
+            return false;
+        }
         for (StoreAppliable poss : appliables)
         {
             if (appliable.appliableTo(poss))

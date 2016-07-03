@@ -34,12 +34,15 @@ public class Package implements StoreAppliable, ConfigSerializable {
                 appliable == null ? null : (Category) appliable,
                 config.getDouble("packages." + id + ".price")
         );
-        config.getConfigurationSection("packages." + id + ".commands").getKeys(false).forEach(key ->
+        if (config.contains("packages." + id + ".commands"))
         {
-            UUID uuid = UUID.fromString(key);
-            StoreCommand command = StoreCommand.deserialize(store, config, uuid, "packages." + id);
-            pack.withCommand(command);
-        });
+            config.getConfigurationSection("packages." + id + ".commands").getKeys(false).forEach(key ->
+            {
+                UUID uuid = UUID.fromString(key);
+                StoreCommand command = StoreCommand.deserialize(store, config, uuid, "packages." + id);
+                pack.withCommand(command);
+            });
+        }
         return pack;
     }
 
@@ -60,6 +63,11 @@ public class Package implements StoreAppliable, ConfigSerializable {
         this.title = title;
         this.description = description;
         this.parent = parent;
+        store.getManager(StoreManager.class).addItem(this);
+        if (parent != null && !parent.getPackages().stream().filter(pack -> pack.getId() == this.id).findAny().isPresent())
+        {
+            parent.withPackage(this.id);
+        }
         this.price = price;
     }
 
