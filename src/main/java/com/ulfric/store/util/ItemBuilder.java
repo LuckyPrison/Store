@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,10 @@ public class ItemBuilder {
     private List<String> lore = Lists.newArrayList();
     private ItemFlag[] flags;
 
+    // Optionals
+
+    private String owner;
+
     public ItemBuilder(Material material)
     {
         this.material = material;
@@ -41,6 +46,12 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder withDurability(Items.ItemColor color)
+    {
+        this.durability = color.getDurability();
+        return this;
+    }
+
     public ItemBuilder withName(String name)
     {
         this.name = name;
@@ -50,6 +61,18 @@ public class ItemBuilder {
     public ItemBuilder withLore(String... lore)
     {
         this.lore.addAll(Arrays.asList(lore));
+        return this;
+    }
+
+    public ItemBuilder withLore(List<String> lore)
+    {
+        this.lore.addAll(lore);
+        return this;
+    }
+
+    public ItemBuilder withOwner(String owner)
+    {
+        this.owner = owner;
         return this;
     }
 
@@ -70,6 +93,15 @@ public class ItemBuilder {
         meta.setLore(lore);
         meta.addItemFlags(flags);
         item.setItemMeta(meta);
+
+        // Optionals
+
+        if (owner != null)
+        {
+            SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
+            skullMeta.setOwner(owner);
+            item.setItemMeta(skullMeta);
+        }
 
         return item;
     }

@@ -22,16 +22,20 @@ public abstract class GUIPage {
 
     protected abstract void loadInventory();
 
-    public void open()
+    protected void onOpen()
+    {}
+
+    public final void open()
     {
         if (inventory == null)
         {
             throw new IllegalStateException("Inventory has not been initialized!");
         }
         inventory.open();
+        onOpen();
     }
 
-    public void onClose()
+    public final void onClose()
     {
         player.onClose();
         if (player.inGUI())
@@ -40,7 +44,7 @@ public abstract class GUIPage {
         }
     }
 
-    public void onClick(InventoryClickEvent event)
+    public final void onClick(InventoryClickEvent event)
     {
         event.setCancelled(true);
         if (inventory.hasAction(event.getSlot()))
@@ -60,7 +64,7 @@ public abstract class GUIPage {
         this.inventory = inventory;
     }
 
-    public String getTitle()
+    public final String getTitle()
     {
         return title;
     }

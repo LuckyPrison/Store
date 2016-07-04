@@ -1,7 +1,6 @@
 package com.ulfric.store.gui;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.ulfric.store.Store;
 import com.ulfric.store.manage.player.StorePlayer;
 import com.ulfric.store.util.Chat;
@@ -15,7 +14,6 @@ import javax.naming.OperationNotSupportedException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 
 public class PageInventory implements StoreInventory {
@@ -39,7 +37,6 @@ public class PageInventory implements StoreInventory {
 
     private final Store store;
     private final StorePlayer player;
-    private final Map<Integer, InventoryAction> actions = Maps.newHashMap();
 
     private final List<ItemStack> contents = Lists.newArrayList();
     private final String title;
@@ -86,9 +83,9 @@ public class PageInventory implements StoreInventory {
             {
                 inventory.setItem(slot++, item);
             }
-            player.ignore(Ignore.PAGE);
+            player.ignore(Ignore.PAGED_INVENTORY);
             player.player().openInventory(inventory);
-            player.stopIgnore(Ignore.PAGE);
+            player.stopIgnore(Ignore.PAGED_INVENTORY);
             return;
         }
 
@@ -126,9 +123,9 @@ public class PageInventory implements StoreInventory {
             inventory.setItem(53, PageInventory.FORWARD_BUTTON);
         }
 
-        player.ignore(Ignore.PAGE);
+        player.ignore(Ignore.PAGED_INVENTORY);
         player.player().openInventory(inventory);
-        player.stopIgnore(Ignore.PAGE);
+        player.stopIgnore(Ignore.PAGED_INVENTORY);
     }
 
     private void backPage()

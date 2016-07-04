@@ -11,7 +11,7 @@ public class Chat {
 
     public static String color(String message)
     {
-        return message == null ? null : ChatColor.translateAlternateColorCodes('&', message);
+        return message == null ? "" : ChatColor.translateAlternateColorCodes('&', message);
     }
 
 }

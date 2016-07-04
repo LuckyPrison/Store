@@ -5,6 +5,8 @@ import com.ulfric.store.Store;
 import com.ulfric.store.gui.GUIPage;
 import com.ulfric.store.gui.Ignore;
 import com.ulfric.store.locale.Locale;
+import com.ulfric.store.shop.Cart;
+import com.ulfric.store.util.Chat;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -21,10 +23,13 @@ public class StorePlayer {
     private final List<Ignore> ignores = Lists.newArrayList();
     private final List<Ignore> cancels = Lists.newArrayList();
 
+    private Cart cart;
+
     public StorePlayer(Store store, Player player)
     {
         this.store = store;
         this.uuid = player.getUniqueId();
+        cart = new Cart(store, player);
     }
 
     public boolean inGUI()
@@ -113,7 +118,12 @@ public class StorePlayer {
     {
         String playerLocale = player().spigot().getLocale();
         Locale locale = Locale.getLocale(playerLocale);
-        return locale.getRawMessage(code);
+        return Chat.color(locale.getRawMessage(code));
+    }
+
+    public String getLocaleMessage(String prefix, String code, String suffix)
+    {
+        return Chat.color(prefix) + getLocaleMessage(code) + Chat.color(suffix);
     }
 
     public boolean ignoring()
@@ -136,9 +146,29 @@ public class StorePlayer {
         return cancels.size() > 0;
     }
 
+    public void cancel(Ignore ignore)
+    {
+        cancels.add(ignore);
+    }
+
+    public void stopCancel(Ignore ignore)
+    {
+        cancels.remove(ignore);
+    }
+
     public Player player()
     {
         return store.getServer().getPlayer(uuid);
+    }
+
+    public Cart getCart()
+    {
+        return cart;
+    }
+
+    public void setCart(Cart cart)
+    {
+        this.cart = cart;
     }
 
 }

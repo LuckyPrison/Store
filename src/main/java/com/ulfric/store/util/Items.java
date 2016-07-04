@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class Items {
 
-    public enum PaneColor {
+    public enum ItemColor {
 
         WHITE(0),
         ORANGE(1),
@@ -26,13 +26,19 @@ public class Items {
 
         private short durability;
 
-        PaneColor(int durability)
+        ItemColor(int durability)
         {
             this.durability = (short) durability;
         }
+
+        public short getDurability()
+        {
+            return durability;
+        }
+
     }
 
-    public static ItemStack stainedPane(PaneColor color)
+    public static ItemStack stainedPane(ItemColor color)
     {
         return ItemBuilder.of(Material.STAINED_GLASS_PANE)
                 .withDurability(color.durability)

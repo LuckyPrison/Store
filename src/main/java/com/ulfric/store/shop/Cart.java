@@ -61,6 +61,15 @@ public class Cart {
         return this;
     }
 
+    public Cart withoutPackage(Package item)
+    {
+        List<PurchasePackage> toRemove = packages.stream()
+                .filter(pack -> pack.getPack().getId() == item.getId())
+                .collect(Collectors.toList());
+        packages.removeAll(toRemove);
+        return this;
+    }
+
     public boolean applyCoupon(Coupon coupon)
     {
         if (coupon.getCouponType() == CouponType.CART)

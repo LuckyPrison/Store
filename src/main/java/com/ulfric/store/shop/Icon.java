@@ -61,7 +61,7 @@ public class Icon implements ConfigSerializable {
 
     public ItemStack getIcon()
     {
-        return icon;
+        return icon.clone();
     }
 
 }

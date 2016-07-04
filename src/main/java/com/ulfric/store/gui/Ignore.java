@@ -3,7 +3,7 @@ package com.ulfric.store.gui;
 public enum Ignore {
 
     INTERNAL,
-    PAGE,
-
+    PAGED_INVENTORY,
+    PAGE_CART_CONFIRM,
 
 }

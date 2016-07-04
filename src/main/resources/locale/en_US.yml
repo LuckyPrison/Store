@@ -1,1 +1,72 @@
+# LOCALE EN_US
+
+
+
 gui.home.title: '&bStore Home'
+
+
+
+
+gui.categories.title: '&bCategories'
+
+
+
+
+gui.transactions.title: '&bTransactions'
+
+
+
+
+gui.cart.title: '&bYour cart'
+
+gui.cart.addplayer.name: '&bBuy for another player'
+gui.cart.addplayer.1: '&bPurchase your packages for'
+gui.cart.addplayer.2: '&bMultiple players at once'
+
+gui.cart.packs.name: '&bAdd a package to the cart'
+
+gui.cart.skull.addplayer.1: '&bAdd players in'
+gui.cart.skull.addplayer.2: '&bthe next slot'
+
+gui.cart.confirm.success: '&aContinue with purchase'
+gui.cart.confirm.error: '&cError'
+
+gui.cart.confirm.success.1: '&bYou will be able to add'
+gui.cart.confirm.success.2: '&bcoupons and select payment next'
+
+gui.cart.confirm.noplayers.1: '&cAdd at least one'
+gui.cart.confirm.noplayers.2: '&cplayer to purchase for'
+
+gui.cart.confirm.nopackages.1: '&cAdd at least one'
+gui.cart.confirm.nopackages.2: '&cpackage to purchase'
+
+
+
+
+gui.packages.list.title: '&bPackages'
+
+
+
+
+store.cart: '&bShopping Cart'
+store.categories: '&bCategories'
+store.transactions: '&bYour transactions'
+store.featured: '&bFeatured packages'
+store.current-cost: '&bCurrent cost: &a$'
+store.purchase-for: '&bPurchasing for:'
+store.see-description: '&bLeft Click to see description'
+store.add-to-cart: '&bRight click to add to cart'
+store.remove-from-cart: '&cRight click to remove from cart'
+store.remove-player: '&cClick to remove player'
+
+
+
+
+generic.back: 'Back'
+generic.name: 'Name'
+generic.uuid: 'UUID'
+generic.noone: 'No one'
+generic.cost: 'Cost'
+
+
+
