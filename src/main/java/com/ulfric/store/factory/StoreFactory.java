@@ -3,6 +3,7 @@ package com.ulfric.store.factory;
 import com.ulfric.store.Store;
 import com.ulfric.store.manage.ConfigManager;
 import com.ulfric.store.shop.Category;
+import com.ulfric.store.shop.Icon;
 import com.ulfric.store.shop.Package;
 
 import javax.annotation.Nullable;
@@ -37,14 +38,14 @@ public class StoreFactory {
         return currentId;
     }
 
-    public Category createCategory(String title)
+    public Category createCategory(String title, Icon icon)
     {
-        return new Category(store, incrementAndGet(), title);
+        return new Category(store, incrementAndGet(), title, icon);
     }
 
-    public Package createPackage(String title, String description, @Nullable Category parent, Double price, String permission)
+    public Package createPackage(String title, String description, @Nullable Category parent, Double price, String permission, Icon icon)
     {
-        return new Package(store, incrementAndGet(), title, description, parent, price, permission);
+        return new Package(store, incrementAndGet(), title, description, parent, price, permission, icon);
     }
 
 }

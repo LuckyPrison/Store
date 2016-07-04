@@ -31,7 +31,7 @@ public class PlayerManager extends Manager {
 
     public StorePlayer register(Player player)
     {
-        return players.put(player.getUniqueId(), new StorePlayer(player));
+        return players.put(player.getUniqueId(), new StorePlayer(store, player));
     }
 
     public void deregister(Player player)

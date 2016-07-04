@@ -21,6 +21,7 @@ public class Package implements StoreAppliable, ConfigSerializable {
         config.set("packages." + pack.getId() + ".parent", pack.parent == null ? -1 : pack.parent.getId());
         config.set("packages." + pack.getId() + ".price", pack.price);
         config.set("packages." + pack.getId() + ".permission", pack.permission);
+        Icon.serialize(store, config, "packages." + pack.getId(), pack.getIcon());
         pack.commands.forEach(command -> StoreCommand.serialize(store, command, config, "packages." + pack.getId()));
     }
 
@@ -35,7 +36,8 @@ public class Package implements StoreAppliable, ConfigSerializable {
                 config.getString("packages." + id + ".description"),
                 appliable == null ? null : (Category) appliable,
                 config.getDouble("packages." + id + ".price"),
-                config.getString("packages." + id + ".permission", null)
+                config.getString("packages." + id + ".permission", null),
+                Icon.deserialize(store, config, "packages." + id)
         );
         if (config.contains("packages." + id + ".commands"))
         {
@@ -59,9 +61,11 @@ public class Package implements StoreAppliable, ConfigSerializable {
 
     private Double price;
 
+    private Icon icon;
+
     private List<StoreCommand> commands = Lists.newArrayList();
 
-    public Package(Store store, int id, String title, String description, Category parent, Double price, String permission)
+    public Package(Store store, int id, String title, String description, Category parent, Double price, String permission, Icon icon)
     {
         this.store = store;
         this.id = id;
@@ -69,6 +73,7 @@ public class Package implements StoreAppliable, ConfigSerializable {
         this.description = description;
         this.parent = parent;
         this.permission = permission;
+        this.icon = icon;
         store.getManager(StoreManager.class).addItem(this);
         if (parent != null && !parent.getPackages().stream().filter(pack -> pack.getId() == this.id).findAny().isPresent())
         {
@@ -132,4 +137,8 @@ public class Package implements StoreAppliable, ConfigSerializable {
         return permission == null || player.hasPermission(permission);
     }
 
+    public Icon getIcon()
+    {
+        return icon;
+    }
 }
