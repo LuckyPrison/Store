@@ -43,6 +43,23 @@ gui.cart.confirm.nopackages.2: '&cpackage to purchase'
 
 
 
+
+gui.add-to-cart.title: '&bAdd to cart'
+
+
+
+
+gui.add-player-to-cart.title: '&bAdd player to cart'
+
+
+
+
+gui.cart-confirm.title: '&bConfirm cart'
+
+
+
+
+
 gui.packages.list.title: '&bPackages'
 
 

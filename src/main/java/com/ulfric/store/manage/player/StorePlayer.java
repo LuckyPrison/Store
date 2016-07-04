@@ -25,6 +25,8 @@ public class StorePlayer {
 
     private Cart cart;
 
+    private boolean cancellingChat = false;
+
     public StorePlayer(Store store, Player player)
     {
         this.store = store;
@@ -171,4 +173,13 @@ public class StorePlayer {
         this.cart = cart;
     }
 
+    public boolean isCancellingChat()
+    {
+        return cancellingChat;
+    }
+
+    public void setCancellingChat(boolean cancellingChat)
+    {
+        this.cancellingChat = cancellingChat;
+    }
 }

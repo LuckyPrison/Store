@@ -11,7 +11,7 @@ public class AddToCartPage extends GUIPage {
 
     public AddToCartPage(Store store, StorePlayer player, Package pack)
     {
-        super(store, player, title);
+        super(store, player, player.getLocaleMessage("gui.add-to-cart.title"));
         this.pack = pack;
     }
 

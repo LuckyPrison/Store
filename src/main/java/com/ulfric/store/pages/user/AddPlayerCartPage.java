@@ -8,7 +8,7 @@ public class AddPlayerCartPage extends GUIPage {
 
     public AddPlayerCartPage(Store store, StorePlayer player)
     {
-        super(store, player, title);
+        super(store, player, player.getLocaleMessage("gui.add-player-to-cart.title"));
     }
 
     @Override

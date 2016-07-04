@@ -7,6 +7,12 @@ import com.ulfric.store.factory.StoreFactory;
 import com.ulfric.store.locale.Locale;
 import com.ulfric.store.manage.*;
 import com.ulfric.store.manage.player.PlayerManager;
+import com.ulfric.store.manage.player.StorePlayer;
+import com.ulfric.store.protocol.Reflection;
+import com.ulfric.store.protocol.TinyProtocol;
+import io.netty.channel.Channel;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -28,6 +34,7 @@ public class Store extends JavaPlugin {
         loadFactories();
         loadManagers();
         Locale.load(this);
+        protocol();
     }
 
     @Override
@@ -59,16 +66,38 @@ public class Store extends JavaPlugin {
         );
 
         managers.forEach(Manager::onEnable);
+    }
 
-        /*managers.add(new StoreManager(this));
-        managers.add(new CategoryManager(this));
-        managers.add(new PackageManager(this));
-        managers.add(new LogManager(this));
-        managers.add(new CommandManager(this));
-        managers.add(new TransactionManager(this));
-        managers.add(new CouponManager(this));
-        managers.add(new SaleManager(this));
-        managers.add(new ConfigManager(this));*/
+    private void protocol()
+    {
+        Reflection.FieldAccessor<IChatBaseComponent> chatMessage = Reflection.getField("{nms}.PacketPlayOutChat", IChatBaseComponent.class, 0);
+        new TinyProtocol(this)
+        {
+
+            @Override
+            public Object onPacketOutAsync(Player receiver, Channel channel, Object packet)
+            {
+                if (chatMessage.hasField(packet))
+                {
+                    PlayerManager manager = getManager(PlayerManager.class);
+                    if (manager == null)
+                    {
+                        return super.onPacketOutAsync(receiver, channel, packet);
+                    }
+                    StorePlayer player = manager.getPlayer(receiver);
+                    if (player == null)
+                    {
+                        return super.onPacketOutAsync(receiver, channel, packet);
+                    }
+                    if (player.isCancellingChat())
+                    {
+                        return null;
+                    }
+                }
+                return super.onPacketOutAsync(receiver, channel, packet);
+            }
+
+        };
     }
 
     private void unloadManagers()

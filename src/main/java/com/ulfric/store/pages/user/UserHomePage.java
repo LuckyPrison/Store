@@ -20,7 +20,7 @@ public class UserHomePage extends GUIPage {
     {
         StandardInventory inventory = new StandardInventory(store, player, 54, title);
 
-        inventory.color(Items.stainedPane(Items.PaneColor.LIGHT_BLUE));
+        inventory.color(Items.stainedPane(Items.ItemColor.LIGHT_BLUE));
 
         inventory.setItem(
                 11,

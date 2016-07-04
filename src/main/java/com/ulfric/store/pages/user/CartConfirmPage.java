@@ -9,7 +9,7 @@ public class CartConfirmPage extends GUIPage {
 
     public CartConfirmPage(Store store, StorePlayer player)
     {
-        super(store, player, title);
+        super(store, player, player.getLocaleMessage("gui.cart-confirm.title"));
     }
 
     @Override
