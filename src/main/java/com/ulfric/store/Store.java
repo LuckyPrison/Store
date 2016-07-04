@@ -5,6 +5,7 @@ import com.ulfric.store.factory.CouponFactory;
 import com.ulfric.store.factory.SaleFactory;
 import com.ulfric.store.factory.StoreFactory;
 import com.ulfric.store.manage.*;
+import com.ulfric.store.manage.player.PlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -50,7 +51,9 @@ public class Store extends JavaPlugin {
                 new TransactionManager(this),
                 new CouponManager(this),
                 new SaleManager(this),
-                new ConfigManager(this)
+                new ConfigManager(this),
+                new PlayerManager(this),
+                new GUIManager(this)
         );
 
         managers.forEach(Manager::onEnable);

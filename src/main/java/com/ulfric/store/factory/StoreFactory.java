@@ -42,9 +42,9 @@ public class StoreFactory {
         return new Category(store, incrementAndGet(), title);
     }
 
-    public Package createPackage(String title, String description, @Nullable Category parent, Double price)
+    public Package createPackage(String title, String description, @Nullable Category parent, Double price, String permission)
     {
-        return new Package(store, incrementAndGet(), title, description, parent, price);
+        return new Package(store, incrementAndGet(), title, description, parent, price, permission);
     }
 
 }

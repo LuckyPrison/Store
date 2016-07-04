@@ -7,6 +7,7 @@ import com.ulfric.store.execute.StoreCommand;
 import com.ulfric.store.manage.ConfigManager;
 import com.ulfric.store.manage.StoreManager;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,7 @@ public class Package implements StoreAppliable, ConfigSerializable {
         config.set("packages." + pack.getId() + ".description", pack.getDescription());
         config.set("packages." + pack.getId() + ".parent", pack.parent == null ? -1 : pack.parent.getId());
         config.set("packages." + pack.getId() + ".price", pack.price);
+        config.set("packages." + pack.getId() + ".permission", pack.permission);
         pack.commands.forEach(command -> StoreCommand.serialize(store, command, config, "packages." + pack.getId()));
     }
 
@@ -32,7 +34,8 @@ public class Package implements StoreAppliable, ConfigSerializable {
                 config.getString("packages." + id + ".title"),
                 config.getString("packages." + id + ".description"),
                 appliable == null ? null : (Category) appliable,
-                config.getDouble("packages." + id + ".price")
+                config.getDouble("packages." + id + ".price"),
+                config.getString("packages." + id + ".permission", null)
         );
         if (config.contains("packages." + id + ".commands"))
         {
@@ -52,17 +55,20 @@ public class Package implements StoreAppliable, ConfigSerializable {
     private String description;
     private Category parent;
 
+    private String permission;
+
     private Double price;
 
     private List<StoreCommand> commands = Lists.newArrayList();
 
-    public Package(Store store, int id, String title, String description, Category parent, Double price)
+    public Package(Store store, int id, String title, String description, Category parent, Double price, String permission)
     {
         this.store = store;
         this.id = id;
         this.title = title;
         this.description = description;
         this.parent = parent;
+        this.permission = permission;
         store.getManager(StoreManager.class).addItem(this);
         if (parent != null && !parent.getPackages().stream().filter(pack -> pack.getId() == this.id).findAny().isPresent())
         {
@@ -115,4 +121,15 @@ public class Package implements StoreAppliable, ConfigSerializable {
     public List<StoreCommand> getCommands() {
         return commands;
     }
+
+    public String getPermission()
+    {
+        return permission;
+    }
+
+    public boolean hasPermission(Player player)
+    {
+        return permission == null || player.hasPermission(permission);
+    }
+
 }
