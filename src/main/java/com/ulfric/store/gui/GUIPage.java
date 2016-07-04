@@ -10,14 +10,17 @@ public abstract class GUIPage {
     protected final StorePlayer player;
 
     protected StoreInventory inventory;
-    private final String title;
+    protected final String title;
 
     public GUIPage(Store store, StorePlayer player, String title)
     {
         this.store = store;
         this.player = player;
         this.title = title;
+        loadInventory();
     }
+
+    protected abstract void loadInventory();
 
     public void open()
     {

@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class StandardInventory implements StoreInventory {
 
@@ -22,6 +23,11 @@ public class StandardInventory implements StoreInventory {
         this.store = store;
         this.player = player;
         this.inventory = store.getServer().createInventory(null, size, title);
+    }
+
+    public void color(ItemStack item)
+    {
+        IntStream.range(0, inventory.getSize()).forEach(i -> inventory.setItem(i, item.clone()));
     }
 
     @Override

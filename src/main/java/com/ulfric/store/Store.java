@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.ulfric.store.factory.CouponFactory;
 import com.ulfric.store.factory.SaleFactory;
 import com.ulfric.store.factory.StoreFactory;
+import com.ulfric.store.locale.Locale;
 import com.ulfric.store.manage.*;
 import com.ulfric.store.manage.player.PlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,7 @@ public class Store extends JavaPlugin {
         new File(getDataFolder(), "logs").mkdirs();
         loadFactories();
         loadManagers();
+        Locale.load(this);
     }
 
     @Override

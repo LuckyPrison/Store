@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.ulfric.store.Store;
 import com.ulfric.store.gui.GUIPage;
 import com.ulfric.store.gui.Ignore;
+import com.ulfric.store.locale.Locale;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -106,6 +107,13 @@ public class StorePlayer {
     {
         crumb.clear();
         player().closeInventory();
+    }
+
+    public String getLocaleMessage(String code)
+    {
+        String playerLocale = player().spigot().getLocale();
+        Locale locale = Locale.getLocale(playerLocale);
+        return locale.getRawMessage(code);
     }
 
     public boolean ignoring()
