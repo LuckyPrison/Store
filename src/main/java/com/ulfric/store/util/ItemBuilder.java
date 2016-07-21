@@ -44,9 +44,9 @@ public class ItemBuilder {
     private int amount = 1;
     private int durability = 0;
 
-    private String name;
+    private String name = "";
     private List<String> lore = Lists.newArrayList();
-    private ItemFlag[] flags;
+    private ItemFlag[] flags = new ItemFlag[0];
 
     // Optionals
 

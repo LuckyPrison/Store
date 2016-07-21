@@ -64,7 +64,7 @@ public class CategoriesPage extends GUIPage {
         {
             return;
         }
-        String idStr = item.getItemMeta().getLore().get(1).substring("&8ID: ".length());
+        String idStr = item.getItemMeta().getLore().get(0).substring("&8ID: ".length());
         int id;
         try
         {

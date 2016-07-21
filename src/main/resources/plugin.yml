@@ -8,3 +8,7 @@ website: http://ulfric.com
 database: false
 description: Store for LuckyPrison
 load: STARTUP
+
+commands:
+  storereturn:
+  store:

@@ -57,7 +57,7 @@ public class Cart {
 
     public Cart withPackage(Package item)
     {
-        this.packages.add(new PurchasePackage(store, item));
+        this.packages.add(new PurchasePackage(store, item, 1, purchaseFor.size()));
         return this;
     }
 
@@ -113,7 +113,7 @@ public class Cart {
             total += pack.getDiscountedPrice();
         }
 
-        this.cartDiscount = new Discount(total);
+        this.cartDiscount = new Discount(total, 1, purchaseFor.size());
 
         List<Coupon> sortedCartCoupons = Lists.newArrayList(cartCoupons);
 
@@ -131,7 +131,7 @@ public class Cart {
 
         total = cartDiscount.getCalculatedPrice();
 
-        total *= purchaseFor.size();
+//        total *= purchaseFor.size();
 
         return total;
     }

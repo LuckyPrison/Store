@@ -7,6 +7,7 @@ import com.ulfric.store.manage.ConfigManager;
 import com.ulfric.store.manage.StoreManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,5 +79,11 @@ public class Category implements StoreAppliable, ConfigSerializable {
     public void save()
     {
         store.getManager(ConfigManager.class).saveCategory(this);
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("[Category,id=%d,title=%s,icon=%s,packages=%s]", id, title, icon.toString(), Arrays.toString(packages.toArray()));
     }
 }

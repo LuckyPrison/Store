@@ -14,11 +14,13 @@ public class PurchasePackage implements Discountable {
 
     private Package pack;
     private int quantity;
+    private int players;
     private Discount discount;
 
-    public PurchasePackage(Store store, Package pack, int quantity)
+    public PurchasePackage(Store store, Package pack, int quantity, int players)
     {
-        double price = pack.getPrice() * quantity;
+        this.players = players;
+        double price = pack.getPrice() * quantity * players;
         List<Sale> sales = store.getManager(SaleManager.class).getSales();
         sales.sort((a, b) ->
         {
@@ -33,7 +35,7 @@ public class PurchasePackage implements Discountable {
                 switch (sale.getType())
                 {
                     case AMOUNT:
-                        price = Math.max(0, price - (sale.getMagnitude() * price));
+                        price = Math.max(0, price - (sale.getMagnitude() * quantity * players));
                         break;
                     case PERCENTAGE:
                         double mult = StoreUtils.getMultiplierFromPercentage(sale.getMagnitude());
@@ -43,7 +45,7 @@ public class PurchasePackage implements Discountable {
             }
         }
         this.pack = pack;
-        this.discount = new Discount(price);
+        this.discount = new Discount(price, quantity, players);
         this.quantity = quantity;
     }
 

@@ -13,17 +13,17 @@ import java.util.stream.IntStream;
 
 public class AddPlayerCartErrorPage extends GUIPage {
 
-    private final String error;
+    private String error;
 
     public AddPlayerCartErrorPage(Store store, StorePlayer player, String error)
     {
-        super(store, player, player.getLocaleMessage("&c", "generic.error", ""));
-        this.error = error;
+        super(store, player, player.getLocaleMessage("&c", "generic.error", ""), error);
     }
 
     @Override
     protected StoreInventory loadInventory()
     {
+        this.error = (String) params[0];
         StandardInventory inventory = new StandardInventory(store, player, 54, title);
         IntStream.range(0, 54).forEach(i ->
         {
@@ -40,7 +40,7 @@ public class AddPlayerCartErrorPage extends GUIPage {
                     }
             );
         });
-        return null;
+        return inventory;
     }
 
 }

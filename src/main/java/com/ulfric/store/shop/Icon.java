@@ -64,4 +64,10 @@ public class Icon implements ConfigSerializable {
         return icon.clone();
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("[Icon,icon=%s,meta=%s]", icon.toString(), icon.getItemMeta() == null ? "null" : icon.getItemMeta().toString());
+    }
+
 }

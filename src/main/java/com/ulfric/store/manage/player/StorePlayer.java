@@ -97,7 +97,7 @@ public class StorePlayer {
     {
         if (inGUI())
         {
-            ignores.remove(currentIndex());
+            crumb.remove(currentIndex());
         }
     }
 

@@ -72,10 +72,12 @@ public class ConfigFile {
         {
             config.createSection(section);
         }
+
         if (!config.isConfigurationSection(section))
         {
             return Stream.empty();
         }
+
         List<ConfigPart> parts = Lists.newArrayList();
         parts.addAll(
                 config.getConfigurationSection(section).getKeys(false)
@@ -83,6 +85,7 @@ public class ConfigFile {
                         .map(key -> new ConfigPart(config, section, key))
                         .collect(Collectors.toList())
         );
+
         return parts.stream();
     }
 

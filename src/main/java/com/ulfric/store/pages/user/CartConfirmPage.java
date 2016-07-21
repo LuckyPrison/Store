@@ -16,7 +16,7 @@ public class CartConfirmPage extends GUIPage {
     @Override
     protected StoreInventory loadInventory()
     {
-
+        return null;
     }
 
     @Override

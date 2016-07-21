@@ -12,11 +12,14 @@ public abstract class GUIPage {
     protected StoreInventory inventory;
     protected final String title;
 
-    public GUIPage(Store store, StorePlayer player, String title)
+    protected final Object[] params;
+
+    public GUIPage(Store store, StorePlayer player, String title, Object... params)
     {
         this.store = store;
         this.player = player;
         this.title = title;
+        this.params = params;
         this.inventory = loadInventory();
     }
 

@@ -13,7 +13,7 @@ import org.bukkit.Material;
 
 public class AddToCartPage extends GUIPage {
 
-    private final Package pack;
+    private Package pack;
     private int amount = 1;
 
     public AddToCartPage(Store store, StorePlayer player, Package pack)
@@ -23,14 +23,14 @@ public class AddToCartPage extends GUIPage {
 
     public AddToCartPage(Store store, StorePlayer player, Package pack, int amount)
     {
-        super(store, player, player.getLocaleMessage("gui.add-to-cart.title"));
-        this.pack = pack;
-        this.amount = amount > 0 ? amount : 1;
+        super(store, player, player.getLocaleMessage("gui.add-to-cart.title"), pack, amount);
     }
 
     @Override
     protected StoreInventory loadInventory()
     {
+        this.pack = (Package) params[0];
+        this.amount = (int) params[1] > 0 ? (int) params[1] : 1;
         StandardInventory inventory = new StandardInventory(store, player, 45, title);
 
         inventory.setItem(

@@ -22,17 +22,17 @@ import java.util.stream.Collectors;
 
 public class CategoryContentsPage extends GUIPage {
 
-    private final Category category;
+    private Category category;
 
     public CategoryContentsPage(Store store, StorePlayer player, Category category)
     {
-        super(store, player, player.getLocaleMessage("gui.packages.list.title"));
-        this.category = category;
+        super(store, player, player.getLocaleMessage("gui.packages.list.title"), category);
     }
 
     @Override
     protected StoreInventory loadInventory()
     {
+        this.category = (Category) params[0];
         PageInventory inventory = new PageInventory(store, player, title);
 
         List<ItemStack> items = category.getPackages().stream().map(pack ->

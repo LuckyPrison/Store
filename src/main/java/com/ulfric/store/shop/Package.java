@@ -9,6 +9,7 @@ import com.ulfric.store.manage.StoreManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -140,5 +141,11 @@ public class Package implements StoreAppliable, ConfigSerializable {
     public Icon getIcon()
     {
         return icon;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("[Package,id=%d,title=%s,description=%s,parent=%d,permission=%s,price=%s,icon=%s,commands=%s]", id, title, description, parent.getId(), permission, price, icon.toString(), Arrays.toString(commands.toArray()));
     }
 }

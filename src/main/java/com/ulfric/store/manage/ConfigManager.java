@@ -81,6 +81,7 @@ public class ConfigManager extends Manager {
 
     private void loadCategories()
     {
+        store.getLogger().info("Loading categories;");
         StoreManager storeManager = store.getManager(StoreManager.class);
         CategoryManager categoryManager = store.getManager(CategoryManager.class);
         storeConfig.getParts("categories").forEach(part ->
@@ -89,6 +90,7 @@ public class ConfigManager extends Manager {
             Category category = Category.deserialize(store, storeConfig.getConfig(), id);
             storeManager.addItem(category);
             categoryManager.add(category);
+            store.getLogger().info(String.format("Loaded category [%s]", category.toString()));
         });
     }
 
@@ -105,6 +107,7 @@ public class ConfigManager extends Manager {
 
     private void loadPackages()
     {
+        store.getLogger().info("Loading packages;");
         StoreManager storeManager = store.getManager(StoreManager.class);
         PackageManager packageManager = store.getManager(PackageManager.class);
         storeConfig.getParts("packages").forEach(part ->
@@ -113,6 +116,7 @@ public class ConfigManager extends Manager {
             Package pack = Package.deserialize(store, storeConfig.getConfig(), id);
             storeManager.addItem(pack);
             packageManager.add(pack);
+            store.getLogger().info(String.format("Loaded package [%s]", pack.toString()));
         });
     }
 
