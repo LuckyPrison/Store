@@ -1,6 +1,8 @@
 package com.ulfric.store;
 
 import com.google.common.collect.Lists;
+import com.ulfric.store.command.CommandReturn;
+import com.ulfric.store.command.CommandStore;
 import com.ulfric.store.factory.CouponFactory;
 import com.ulfric.store.factory.SaleFactory;
 import com.ulfric.store.factory.StoreFactory;
@@ -33,6 +35,7 @@ public class Store extends JavaPlugin {
         new File(getDataFolder(), "logs").mkdirs();
         loadFactories();
         loadManagers();
+        loadCommands();
         Locale.load(this);
         protocol();
     }
@@ -68,6 +71,12 @@ public class Store extends JavaPlugin {
         managers.forEach(Manager::onEnable);
     }
 
+    private void loadCommands()
+    {
+        getCommand("storereturn").setExecutor(new CommandReturn(this));
+        getCommand("store").setExecutor(new CommandStore(this));
+    }
+
     private void protocol()
     {
         Reflection.FieldAccessor<IChatBaseComponent> chatMessage = Reflection.getField("{nms}.PacketPlayOutChat", IChatBaseComponent.class, 0);
@@ -89,7 +98,7 @@ public class Store extends JavaPlugin {
                     {
                         return super.onPacketOutAsync(receiver, channel, packet);
                     }
-                    if (player.isCancellingChat())
+                    if (player.isWatchingPackage())
                     {
                         return null;
                     }

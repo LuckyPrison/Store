@@ -13,6 +13,7 @@ gui.categories.title: '&bCategories'
 
 
 gui.transactions.title: '&bTransactions'
+gui.transactions.name: '&bTransaction '
 
 
 
@@ -45,11 +46,15 @@ gui.cart.confirm.nopackages.2: '&cpackage to purchase'
 
 
 gui.add-to-cart.title: '&bAdd to cart'
+gui.add-to-cart.confirm: '&aClick to add to cart!'
+gui.add-to-cart.quantity.add: '&bIncrease quantity by 1'
+gui.add-to-cart.quantity.minus: '&bDecrease quantity by 1'
 
 
 
 
 gui.add-player-to-cart.title: '&bAdd player to cart'
+gui.add-player-to-cart.notfound: '&cPlayer was not found!'
 
 
 
@@ -61,6 +66,11 @@ gui.cart-confirm.title: '&bConfirm cart'
 
 
 gui.packages.list.title: '&bPackages'
+
+
+
+
+gui.generic.clicktoclose: 'Click to close'
 
 
 
@@ -79,11 +89,29 @@ store.remove-player: '&cClick to remove player'
 
 
 
+chat.not-viewing-package: '&cYou''re not viewing a package!\nStop clicking things!'
+
+chat.package.header: '&b||===============||'
+chat.package.title: '&dTitle: &b'
+chat.package.id: '&dID: &b'
+chat.package.description: '&dDescription: &b'
+chat.package.quantity: '&dQuantity: &d'
+chat.package.price: '&dPrice: &a$&d'
+chat.package.permission.allow: '&aYou have permission to purchase this package!'
+chat.package.permission.deny: '&cYou do not have permission to purchase this package!'
+chat.package.return: '&b&lClick here to return to the store!'
+chat.package.return.tooltip: '&bClick to return!'
+chat.package.footer: '&b||===============||'
+
+
+
+
 generic.back: 'Back'
 generic.name: 'Name'
 generic.uuid: 'UUID'
 generic.noone: 'No one'
 generic.cost: 'Cost'
+generic.error: 'Error'
 
 
 

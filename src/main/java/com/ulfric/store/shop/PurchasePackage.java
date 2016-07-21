@@ -10,12 +10,15 @@ import java.util.List;
 
 public class PurchasePackage implements Discountable {
 
+    // TODO: Forgot to implement package quantities: QUANTITIES WILL BE BROKEN BECAUSE VOUCHERS + SALES DO NOT ACCOUNT FOR THEM!
+
     private Package pack;
+    private int quantity;
     private Discount discount;
 
-    public PurchasePackage(Store store, Package pack)
+    public PurchasePackage(Store store, Package pack, int quantity)
     {
-        double price = pack.getPrice();
+        double price = pack.getPrice() * quantity;
         List<Sale> sales = store.getManager(SaleManager.class).getSales();
         sales.sort((a, b) ->
         {
@@ -30,7 +33,7 @@ public class PurchasePackage implements Discountable {
                 switch (sale.getType())
                 {
                     case AMOUNT:
-                        price = Math.max(0, price - sale.getMagnitude());
+                        price = Math.max(0, price - (sale.getMagnitude() * price));
                         break;
                     case PERCENTAGE:
                         double mult = StoreUtils.getMultiplierFromPercentage(sale.getMagnitude());
@@ -41,6 +44,7 @@ public class PurchasePackage implements Discountable {
         }
         this.pack = pack;
         this.discount = new Discount(price);
+        this.quantity = quantity;
     }
 
     public boolean applyCoupon(Coupon coupon)
@@ -74,5 +78,18 @@ public class PurchasePackage implements Discountable {
     public double getDiscountedPrice()
     {
         return discount.getCalculatedPrice();
+    }
+
+    public int getQuantity()
+    {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity)
+    {
+        if (quantity > 0)
+        {
+            this.quantity = quantity;
+        }
     }
 }

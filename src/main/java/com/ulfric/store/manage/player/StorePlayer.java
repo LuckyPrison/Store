@@ -6,13 +6,16 @@ import com.ulfric.store.gui.GUIPage;
 import com.ulfric.store.gui.Ignore;
 import com.ulfric.store.locale.Locale;
 import com.ulfric.store.shop.Cart;
+import com.ulfric.store.shop.Package;
 import com.ulfric.store.util.Chat;
+import mkremins.fanciful.FancyMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class StorePlayer {
 
@@ -25,13 +28,39 @@ public class StorePlayer {
 
     private Cart cart;
 
-    private boolean cancellingChat = false;
+    private boolean watchingPackage = false;
 
     public StorePlayer(Store store, Player player)
     {
         this.store = store;
         this.uuid = player.getUniqueId();
         cart = new Cart(store, player);
+    }
+
+    public void sendMessage(String localeCode)
+    {
+        String message = getLocaleMessage(localeCode);
+        if (!message.contains("\\n"))
+        {
+            player().sendMessage(getLocaleMessage(localeCode));
+        }
+        else
+        {
+            Lists.newArrayList(message.split("\\n")).forEach(part -> player().sendMessage(part));
+        }
+    }
+
+    public void sendMessage(String prefix, String localeCode, String suffix)
+    {
+        String message = getLocaleMessage(prefix, localeCode, suffix);
+        if (!message.contains("\\n"))
+        {
+            player().sendMessage(message);
+        }
+        else
+        {
+            Lists.newArrayList(message.split("\\n")).forEach(part -> player().sendMessage(part));
+        }
     }
 
     public boolean inGUI()
@@ -110,10 +139,13 @@ public class StorePlayer {
         currentPage().onClose();
     }
 
-    public void closeGUI()
+    public void closeGUI(boolean closeInventory)
     {
         crumb.clear();
-        player().closeInventory();
+        if (closeInventory)
+        {
+            player().closeInventory();
+        }
     }
 
     public String getLocaleMessage(String code)
@@ -126,6 +158,42 @@ public class StorePlayer {
     public String getLocaleMessage(String prefix, String code, String suffix)
     {
         return Chat.color(prefix) + getLocaleMessage(code) + Chat.color(suffix);
+    }
+
+    public void showDescription(Package pack)
+    {
+        ignore(Ignore.INTERNAL);
+        player().closeInventory();
+        stopIgnore(Ignore.INTERNAL);
+
+        sendMessage("chat.package.header");
+        sendMessage("", "chat.package.title", pack.getTitle());
+        sendMessage("", "chat.package.id", String.valueOf(pack.getId()));
+        sendMessage("", "chat.package.description", pack.getDescription());
+        sendMessage("", "chat.package.price", String.valueOf(pack.getPrice()));
+        sendMessage(pack.hasPermission(player()) ? "chat.package.permission.allow" : "chat.package.permission.deny");
+        sendMessage("chat.package.footer");
+        new FancyMessage(getLocaleMessage("chat.package.return"))
+                .command("/storereturn")
+                .tooltip(getLocaleMessage("chat.package.return.tooltip"))
+                .send(player());
+        watchingPackage = true;
+    }
+
+    public void backToGUI()
+    {
+        if (!watchingPackage)
+        {
+            return;
+        }
+        watchingPackage = false;
+        clearChat();
+        openPage(currentPage(), false);
+    }
+
+    public void clearChat()
+    {
+        IntStream.range(0, 150).forEach(i -> player().sendMessage(" "));
     }
 
     public boolean ignoring()
@@ -173,13 +241,8 @@ public class StorePlayer {
         this.cart = cart;
     }
 
-    public boolean isCancellingChat()
+    public boolean isWatchingPackage()
     {
-        return cancellingChat;
-    }
-
-    public void setCancellingChat(boolean cancellingChat)
-    {
-        this.cancellingChat = cancellingChat;
+        return watchingPackage;
     }
 }

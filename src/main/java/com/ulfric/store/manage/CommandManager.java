@@ -84,7 +84,7 @@ public class CommandManager extends Manager {
                     }
                     else
                     {
-                        store.getLogger().severe("StoreCommand was executed but failed!");
+                        store.getLogger().severe("CommandStore was executed but failed!");
                         store.getLogger().severe("Command -> " + command.toString());
                     }
                 }

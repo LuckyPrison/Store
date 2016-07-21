@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.ulfric.store.Store;
 import com.ulfric.store.gui.GUIPage;
 import com.ulfric.store.gui.StandardInventory;
+import com.ulfric.store.gui.StoreInventory;
 import com.ulfric.store.manage.player.StorePlayer;
 import com.ulfric.store.shop.PurchasePackage;
 import com.ulfric.store.util.Chat;
@@ -28,7 +29,7 @@ public class CartPage extends GUIPage {
     }
 
     @Override
-    protected void loadInventory()
+    protected StoreInventory loadInventory()
     {
         StandardInventory inventory = new StandardInventory(store, player, 54, title);
 
@@ -133,7 +134,7 @@ public class CartPage extends GUIPage {
                 {
                     if (finalSuccess)
                     {
-                        player.closeGUI();
+                        player.closeGUI(false);
                         player.openPage(new CartConfirmPage(store, player), true);
                     }
                 }
@@ -149,7 +150,7 @@ public class CartPage extends GUIPage {
             loadPlayers(inventory);
         }
 
-        set(inventory);
+        return inventory;
     }
 
     private void loadPackages(StandardInventory inventory)
@@ -189,7 +190,7 @@ public class CartPage extends GUIPage {
                     {
                         if (event.getClick() == ClickType.LEFT)
                         {
-                            player.openPage(new PackageDescriptionPage(store, player, pack.getPack()), true);
+                            player.showDescription(pack.getPack());
                         }
                         else if (event.getClick() == ClickType.RIGHT)
                         {

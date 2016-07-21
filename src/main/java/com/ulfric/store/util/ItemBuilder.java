@@ -17,6 +17,29 @@ public class ItemBuilder {
         return new ItemBuilder(material);
     }
 
+    public static ItemBuilder of(ItemStack item, boolean meta)
+    {
+        ItemBuilder builder = new ItemBuilder(item.getType())
+                .withAmount(item.getAmount())
+                .withDurability(item.getDurability());
+        if (meta)
+        {
+            if (item.hasItemMeta())
+            {
+                if (item.getItemMeta().hasDisplayName())
+                {
+                    builder.withName(item.getItemMeta().getDisplayName());
+                }
+                if (item.getItemMeta().hasLore())
+                {
+                    builder.withLore(item.getItemMeta().getLore());
+                }
+                item.getItemMeta().getItemFlags().forEach(builder::withFlags);
+            }
+        }
+        return builder;
+    }
+
     private Material material;
     private int amount = 1;
     private int durability = 0;

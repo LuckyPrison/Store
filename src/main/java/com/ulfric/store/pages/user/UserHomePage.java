@@ -3,6 +3,7 @@ package com.ulfric.store.pages.user;
 import com.ulfric.store.Store;
 import com.ulfric.store.gui.GUIPage;
 import com.ulfric.store.gui.StandardInventory;
+import com.ulfric.store.gui.StoreInventory;
 import com.ulfric.store.manage.player.StorePlayer;
 import com.ulfric.store.util.ItemBuilder;
 import com.ulfric.store.util.Items;
@@ -16,7 +17,7 @@ public class UserHomePage extends GUIPage {
     }
 
     @Override
-    protected void loadInventory()
+    protected StoreInventory loadInventory()
     {
         StandardInventory inventory = new StandardInventory(store, player, 54, title);
 
@@ -53,7 +54,7 @@ public class UserHomePage extends GUIPage {
                         .build()
         );
 
-        set(inventory);
+        return inventory;
     }
 
 }

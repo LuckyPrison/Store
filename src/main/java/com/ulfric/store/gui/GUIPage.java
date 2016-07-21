@@ -17,10 +17,10 @@ public abstract class GUIPage {
         this.store = store;
         this.player = player;
         this.title = title;
-        loadInventory();
+        this.inventory = loadInventory();
     }
 
-    protected abstract void loadInventory();
+    protected abstract StoreInventory loadInventory();
 
     protected void onOpen()
     {}

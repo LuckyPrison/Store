@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 
 public class GUIManager extends Manager {
 
@@ -20,6 +21,21 @@ public class GUIManager extends Manager {
     public class GUIListener implements Listener {
 
         @EventHandler
+        public void on(InventoryOpenEvent event)
+        {
+            if (!(event.getPlayer() instanceof Player))
+            {
+                return;
+            }
+            StorePlayer player = store.getManager(PlayerManager.class).getPlayer((Player) event.getPlayer());
+
+            if (player.isWatchingPackage())
+            {
+                player.player().closeInventory();
+            }
+        }
+
+        @EventHandler
         public void on(InventoryClickEvent event)
         {
             if (!(event.getWhoClicked() instanceof Player))
@@ -29,6 +45,11 @@ public class GUIManager extends Manager {
 
             Player player = (Player) event.getWhoClicked();
             StorePlayer storePlayer = store.getManager(PlayerManager.class).getPlayer(player);
+
+            if (storePlayer.isWatchingPackage())
+            {
+                return;
+            }
 
             if (storePlayer.inGUI())
             {
@@ -46,6 +67,11 @@ public class GUIManager extends Manager {
 
             Player player = (Player) event.getPlayer();
             StorePlayer storePlayer = store.getManager(PlayerManager.class).getPlayer(player);
+
+            if (storePlayer.isWatchingPackage())
+            {
+                return;
+            }
 
             if (storePlayer.inGUI())
             {

@@ -3,6 +3,7 @@ package com.ulfric.store.pages.user;
 import com.ulfric.store.Store;
 import com.ulfric.store.gui.GUIPage;
 import com.ulfric.store.gui.PageInventory;
+import com.ulfric.store.gui.StoreInventory;
 import com.ulfric.store.manage.StoreManager;
 import com.ulfric.store.manage.player.StorePlayer;
 import com.ulfric.store.shop.Category;
@@ -30,7 +31,7 @@ public class CategoryContentsPage extends GUIPage {
     }
 
     @Override
-    protected void loadInventory()
+    protected StoreInventory loadInventory()
     {
         PageInventory inventory = new PageInventory(store, player, title);
 
@@ -52,7 +53,7 @@ public class CategoryContentsPage extends GUIPage {
 
         inventory.withItems(items);
 
-        set(inventory);
+        return inventory;
     }
 
     @Override
@@ -95,7 +96,7 @@ public class CategoryContentsPage extends GUIPage {
         }
         if (event.getClick() == ClickType.LEFT)
         {
-            player.openPage(new PackageDescriptionPage(store, player, (Package) apply), true);
+            player.showDescription((Package) apply);
         }
         else if (event.getClick() == ClickType.RIGHT)
         {

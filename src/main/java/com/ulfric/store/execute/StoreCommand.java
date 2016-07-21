@@ -133,7 +133,7 @@ public class StoreCommand implements ConfigSerializable {
     @Override
     public String toString()
     {
-        return String.format("StoreCommand[%s:type->%s:delay->%d:reqonline->%b:executed->%b]", command, type, delay, requireOnline, executed);
+        return String.format("CommandStore[%s:type->%s:delay->%d:reqonline->%b:executed->%b]", command, type, delay, requireOnline, executed);
     }
 
 }

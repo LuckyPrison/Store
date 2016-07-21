@@ -3,6 +3,7 @@ package com.ulfric.store.pages.user;
 import com.ulfric.store.Store;
 import com.ulfric.store.gui.GUIPage;
 import com.ulfric.store.gui.Ignore;
+import com.ulfric.store.gui.StoreInventory;
 import com.ulfric.store.manage.player.StorePlayer;
 
 public class CartConfirmPage extends GUIPage {
@@ -13,7 +14,7 @@ public class CartConfirmPage extends GUIPage {
     }
 
     @Override
-    protected void loadInventory()
+    protected StoreInventory loadInventory()
     {
 
     }
