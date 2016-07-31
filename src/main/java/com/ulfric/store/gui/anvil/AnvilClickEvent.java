@@ -8,7 +8,7 @@ public class AnvilClickEvent {
     private String name;
     private InventoryClickEvent event;
 
-    private boolean close = true;
+    private boolean close = false;
     private boolean destroy = true;
 
     public AnvilClickEvent(AnvilSlot slot, String name, InventoryClickEvent event)

@@ -51,7 +51,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <finalName>${project.name}-v${project.version}</finalName>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
                 </configuration>
             </plugin>
         </plugins>

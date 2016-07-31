@@ -14,6 +14,7 @@ import com.ulfric.store.protocol.Reflection;
 import com.ulfric.store.protocol.TinyProtocol;
 import io.netty.channel.Channel;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +39,7 @@ public class Store extends JavaPlugin {
         loadCommands();
         Locale.load(this);
         protocol();
+        String foo = "blah " + ChatColor.GREEN;
     }
 
     @Override
@@ -111,7 +113,7 @@ public class Store extends JavaPlugin {
 
     private void unloadManagers()
     {
-        managers.forEach(Manager::onDisable);
+        Lists.reverse(managers).stream().forEach(Manager::onDisable);
     }
 
     public <T extends Manager> T getManager(Class<T> type)

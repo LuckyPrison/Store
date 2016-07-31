@@ -98,7 +98,7 @@ public class Anvil_v1_8_R3 extends AnvilGUI {
                             Bukkit.getScheduler().runTask(store, () -> event.getWhoClicked().closeInventory());
                         }
 
-                        if (clickEvent.isWillClose()) {
+                        if (clickEvent.isWillDestroy()) {
                             destroy();
                         }
                     }
@@ -192,6 +192,8 @@ public class Anvil_v1_8_R3 extends AnvilGUI {
 
         //Add the slot listener
         p.activeContainer.addSlotListener(p);
+
+        store.getServer().getPluginManager().registerEvents(listener, store);
     }
 
     @Override

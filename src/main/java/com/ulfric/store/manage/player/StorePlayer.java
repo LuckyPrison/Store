@@ -9,6 +9,7 @@ import com.ulfric.store.shop.Cart;
 import com.ulfric.store.shop.Package;
 import com.ulfric.store.util.Chat;
 import mkremins.fanciful.FancyMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -93,6 +94,10 @@ public class StorePlayer {
         return crumb.size() - 1;
     }
 
+    public List<GUIPage> getCrumb() {
+        return crumb;
+    }
+
     public void onClose()
     {
         if (inGUI())
@@ -103,19 +108,25 @@ public class StorePlayer {
 
     public void onInventoryClick(InventoryClickEvent event)
     {
+        System.out.println("PlayerInventoryClick [1]");
         if (!inGUI())
         {
+            System.out.println("PlayerInventoryClick [2]");
             return;
         }
         if (event.getClickedInventory() == null)
         {
+            System.out.println("PlayerInventoryClick [3]");
             return;
         }
         if (!event.getClickedInventory().equals(player().getOpenInventory().getTopInventory()))
         {
+            System.out.println("PlayerInventoryClick [4]");
             return;
         }
+        System.out.println("PlayerInventoryClick [5]");
         currentPage().onClick(event);
+        System.out.println("PlayerInventoryClick [6]");
     }
 
     public void onInventoryClose(InventoryCloseEvent event)
@@ -126,7 +137,7 @@ public class StorePlayer {
         }
         if (cancelling())
         {
-            openPage(currentPage(), false);
+            Bukkit.getScheduler().runTask(store, () -> openPage(currentPage(), false));
         }
         if (inGUI())
         {
@@ -165,6 +176,8 @@ public class StorePlayer {
         ignore(Ignore.INTERNAL);
         player().closeInventory();
         stopIgnore(Ignore.INTERNAL);
+
+        clearChat();
 
         sendMessage("chat.package.header");
         sendMessage("", "chat.package.title", pack.getTitle());

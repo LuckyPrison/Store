@@ -18,6 +18,12 @@ public class GUIManager extends Manager {
         store.getServer().getPluginManager().registerEvents(new GUIListener(), store);
     }
 
+    @Override
+    public void onDisable()
+    {
+        store.getServer().getOnlinePlayers().stream().map(store.getManager(PlayerManager.class)::getPlayer).filter(StorePlayer::inGUI).forEach(player -> player.closeGUI(true));
+    }
+
     public class GUIListener implements Listener {
 
         @EventHandler
@@ -29,6 +35,11 @@ public class GUIManager extends Manager {
             }
             StorePlayer player = store.getManager(PlayerManager.class).getPlayer((Player) event.getPlayer());
 
+            if (player == null)
+            {
+                return;
+            }
+
             if (player.isWatchingPackage())
             {
                 player.player().closeInventory();
@@ -38,23 +49,36 @@ public class GUIManager extends Manager {
         @EventHandler
         public void on(InventoryClickEvent event)
         {
+            store.getLogger().info("InventoryClickEvent [1]");
             if (!(event.getWhoClicked() instanceof Player))
             {
                 return;
             }
+            store.getLogger().info("InventoryClickEvent [2]");
 
             Player player = (Player) event.getWhoClicked();
             StorePlayer storePlayer = store.getManager(PlayerManager.class).getPlayer(player);
+
+            if (storePlayer == null)
+            {
+                return;
+            }
+
+            store.getLogger().info("InventoryClickEvent [3]");
 
             if (storePlayer.isWatchingPackage())
             {
                 return;
             }
 
+            store.getLogger().info("InventoryClickEvent [4]");
+
             if (storePlayer.inGUI())
             {
+                store.getLogger().info("InventoryClickEvent [5]");
                 storePlayer.onInventoryClick(event);
             }
+            store.getLogger().info("InventoryClickEvent [6]");
         }
 
         @EventHandler
@@ -67,6 +91,11 @@ public class GUIManager extends Manager {
 
             Player player = (Player) event.getPlayer();
             StorePlayer storePlayer = store.getManager(PlayerManager.class).getPlayer(player);
+
+            if (storePlayer == null)
+            {
+                return;
+            }
 
             if (storePlayer.isWatchingPackage())
             {

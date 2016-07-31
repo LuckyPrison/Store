@@ -209,6 +209,7 @@ public class CartPage extends GUIPage {
         {
             OfflinePlayer player = Bukkit.getOfflinePlayer(players.get(i));
             ItemStack skull = ItemBuilder.of(Material.SKULL_ITEM)
+                    .withDurability(3)
                     .withOwner(player.getName())
                     .withName(Chat.color("&b" + player.getName()))
                     .withLore(

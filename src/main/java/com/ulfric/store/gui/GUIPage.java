@@ -2,6 +2,7 @@ package com.ulfric.store.gui;
 
 import com.ulfric.store.Store;
 import com.ulfric.store.manage.player.StorePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public abstract class GUIPage {
@@ -43,20 +44,25 @@ public abstract class GUIPage {
         player.onClose();
         if (player.inGUI())
         {
-            player.openPage(player.currentPage(), false);
+            Bukkit.getScheduler().runTask(store, () -> player.openPage(player.currentPage(), false));
         }
     }
 
     public final void onClick(InventoryClickEvent event)
     {
+        System.out.println("GUIPageClick [1]");
         event.setCancelled(true);
         if (inventory.hasAction(event.getSlot()))
         {
+            System.out.println("GUIPageClick [2]");
             inventory.executeAction(event.getSlot(), event);
+            System.out.println("GUIPageClick [3]");
         }
         else
         {
+            System.out.println("GUIPageClick [4]");
             onInventoryClick(event);
+            System.out.println("GUIPageClick [5]");
         }
     }
 
