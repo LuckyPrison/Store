@@ -4,6 +4,6 @@ public enum Ignore {
 
     INTERNAL,
     PAGED_INVENTORY,
-    PAGE_CART_CONFIRM,
+    PAGE_CART_CONFIRM, ADD_PLAYER,
 
 }

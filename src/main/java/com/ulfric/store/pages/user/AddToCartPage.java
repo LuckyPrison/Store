@@ -14,7 +14,7 @@ import org.bukkit.Material;
 public class AddToCartPage extends GUIPage {
 
     private Package pack;
-    private int amount = 1;
+    private int amount;
 
     public AddToCartPage(Store store, StorePlayer player, Package pack)
     {
@@ -61,6 +61,7 @@ public class AddToCartPage extends GUIPage {
                         .build(),
                 event ->
                 {
+                    System.out.println(String.format("Amount: %d, Amount + 1: %d", amount, amount + 1));
                     player.openPage(new AddToCartPage(store, player, pack, amount + 1), false);
                 }
         );

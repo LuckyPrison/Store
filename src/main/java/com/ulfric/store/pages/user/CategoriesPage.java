@@ -29,12 +29,15 @@ public class CategoriesPage extends GUIPage {
     @Override
     protected StoreInventory loadInventory()
     {
+        System.out.println("Categories [1]");
         PageInventory inventory = new PageInventory(store, player, title);
 
+        System.out.println("Categories [2]");
         List<ItemStack> items = store.getManager(CategoryManager.class).get()
                 .stream()
                 .map(category ->
                 {
+                    System.out.println("Categories [3]");
                     ItemStack item = ItemBuilder.of(Material.CHEST)
                             .withName(Chat.color("&b" + category.getTitle()))
                             .withLore(Chat.color("&8ID: " + category.getId()))
@@ -43,7 +46,9 @@ public class CategoriesPage extends GUIPage {
                 })
                 .collect(Collectors.toList());
 
+        System.out.println("Categories [4]");
         inventory.withItems(items);
+        System.out.println("Categories [5]");
 
         return inventory;
     }

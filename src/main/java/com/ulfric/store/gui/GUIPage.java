@@ -41,6 +41,7 @@ public abstract class GUIPage {
 
     public final void onClose()
     {
+        onInventoryClose();
         player.onClose();
         if (player.inGUI())
         {
@@ -67,6 +68,8 @@ public abstract class GUIPage {
     }
 
     protected void onInventoryClick(InventoryClickEvent event) {}
+
+    protected void onInventoryClose() {}
 
     protected void set(StoreInventory inventory)
     {

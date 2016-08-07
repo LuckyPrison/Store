@@ -35,33 +35,45 @@ public class Locale {
 
                 for (File file : folder.listFiles())
                 {
+                    System.out.println("Locale 1");
                     YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-                    String name = config.getName();
+                    System.out.println("Locale 2");
+                    String name = file.getName();
 
+                    System.out.println("Locale 3 " + name);
                     if (name == null) continue;
 
+                    System.out.println("Locale 4");
                     if (name.equals(ignore))
                     {
                         continue;
                     }
 
+                    System.out.println("Locale 5");
                     String nonYamlName = name.replace(".yml", "");
 
+                    System.out.println("Locale 6 " + nonYamlName);
                     Locale locale;
 
                     if ("en_US".equals(nonYamlName))
                     {
+                        System.out.println("Locale 7 en_US");
                         locale = Locale.ENGLISH_US;
                     }
                     else
                     {
+                        System.out.println("Locale 8 new Locale");
                         locale = new Locale(nonYamlName);
 
                         this.locales.put(nonYamlName, locale);
                     }
 
-                    config.getKeys(false).forEach(key -> locale.registerMessage(key, config.getString(key)));
+                    config.getKeys(true).forEach(key ->
+                    {
+                        System.out.println("Locale 9 key " + key + " = " + config.getString(key));
+                        locale.registerMessage(key, config.getString(key));
+                    });
                 }
             }
 

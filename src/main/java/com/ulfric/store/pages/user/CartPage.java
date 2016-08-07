@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -31,6 +32,7 @@ public class CartPage extends GUIPage {
     @Override
     protected StoreInventory loadInventory()
     {
+        System.out.println(String.format("Loading with players [%s]", Arrays.toString(player.getCart().getPurchaseFor().toArray())));
         StandardInventory inventory = new StandardInventory(store, player, 54, title);
 
         inventory.setItem(
@@ -153,6 +155,11 @@ public class CartPage extends GUIPage {
         return inventory;
     }
 
+    @Override
+    public void onInventoryClick(InventoryClickEvent event) {
+        System.out.println("Called event!");
+    }
+
     private void loadPackages(StandardInventory inventory)
     {
         List<PurchasePackage> packages = player.getCart().getPackages();
@@ -234,6 +241,7 @@ public class CartPage extends GUIPage {
                     skull,
                     event ->
                     {
+                        System.out.println("Called!");
                         this.player.getCart().purchaseWithout(player.getUniqueId());
                         this.player.openPage(new CartPage(store, this.player), false);
                     }

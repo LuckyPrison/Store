@@ -55,6 +55,7 @@ public class Anvil_v1_8_R3 extends AnvilGUI {
 
     private Listener listener;
     private boolean closing = false;
+    private boolean destroying = false;
 
     public Anvil_v1_8_R3(Store store, StorePlayer player)
     {
@@ -86,7 +87,13 @@ public class Anvil_v1_8_R3 extends AnvilGUI {
                             }
                         }
 
-                        AnvilClickEvent clickEvent = new AnvilClickEvent(AnvilSlot.bySlot(slot), name, event);
+                        if (name == null || name.isEmpty() || AnvilSlot.bySlot(slot) != AnvilSlot.OUTPUT)
+                        {
+                            return;
+                        }
+
+                        String finalName = name;
+                        AnvilClickEvent clickEvent = new AnvilClickEvent(AnvilSlot.bySlot(slot), finalName, event);
 
                         if (clickConsumer != null)
                         {
@@ -99,8 +106,26 @@ public class Anvil_v1_8_R3 extends AnvilGUI {
                         }
 
                         if (clickEvent.isWillDestroy()) {
+                            destroying = true;
                             destroy();
                         }
+
+                        /*AnvilClickEvent clickEvent = new AnvilClickEvent(AnvilSlot.bySlot(slot), name, event);
+
+                        if (clickConsumer != null)
+                        {
+                            clickConsumer.accept(clickEvent);
+                        }
+
+                        if (clickEvent.isWillClose()) {
+                            closing = true;
+                            Bukkit.getScheduler().runTask(store, () -> event.getWhoClicked().closeInventory());
+                        }
+
+                        if (clickEvent.isWillDestroy()) {
+                            destroying = true;
+                            destroy();
+                        }*/
                     }
                 }
             }
@@ -112,6 +137,9 @@ public class Anvil_v1_8_R3 extends AnvilGUI {
                     Inventory inventory = event.getInventory();
 
                     if (inventory.equals(Anvil_v1_8_R3.this.inventory)) {
+                        if (!destroying) {
+                            player.giveExpLevels(-1);
+                        }
                         AnvilCloseEvent closeEvent = new AnvilCloseEvent(event, closing);
                         if (closeConsumer != null)
                         {
@@ -194,6 +222,7 @@ public class Anvil_v1_8_R3 extends AnvilGUI {
         p.activeContainer.addSlotListener(p);
 
         store.getServer().getPluginManager().registerEvents(listener, store);
+        player.player().giveExpLevels(1);
     }
 
     @Override

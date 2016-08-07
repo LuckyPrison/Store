@@ -71,10 +71,11 @@ public class StorePlayer {
 
     public void openPage(GUIPage page, boolean doc)
     {
-        if (doc)
+        if (!doc && inGUI())
         {
-            crumb.add(page);
+            crumb.remove(currentIndex());
         }
+        crumb.add(page);
         ignores.add(Ignore.INTERNAL);
         page.open();
         ignores.remove(Ignore.INTERNAL);
@@ -138,6 +139,7 @@ public class StorePlayer {
         if (cancelling())
         {
             Bukkit.getScheduler().runTask(store, () -> openPage(currentPage(), false));
+            return;
         }
         if (inGUI())
         {
@@ -163,7 +165,8 @@ public class StorePlayer {
     {
         String playerLocale = player().spigot().getLocale();
         Locale locale = Locale.getLocale(playerLocale);
-        return Chat.color(locale.getRawMessage(code));
+        String raw = locale.getRawMessage(code);
+        return Chat.color(raw);
     }
 
     public String getLocaleMessage(String prefix, String code, String suffix)
@@ -186,11 +189,11 @@ public class StorePlayer {
         sendMessage("", "chat.package.price", String.valueOf(pack.getPrice()));
         sendMessage(pack.hasPermission(player()) ? "chat.package.permission.allow" : "chat.package.permission.deny");
         sendMessage("chat.package.footer");
-        new FancyMessage(getLocaleMessage("chat.package.return"))
+        new FancyMessage(getLocaleMessage("chat.package.return.text"))
                 .command("/storereturn")
                 .tooltip(getLocaleMessage("chat.package.return.tooltip"))
                 .send(player());
-        watchingPackage = true;
+        Bukkit.getScheduler().runTask(store, () -> watchingPackage = true);
     }
 
     public void backToGUI()

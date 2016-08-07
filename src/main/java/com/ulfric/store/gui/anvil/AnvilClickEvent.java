@@ -16,6 +16,7 @@ public class AnvilClickEvent {
         this.slot = slot;
         this.name = name;
         this.event = event;
+        this.destroy = slot == AnvilSlot.OUTPUT;
     }
 
     public AnvilSlot getSlot()

@@ -34,7 +34,7 @@ public class CommandStore implements CommandExecutor {
                     return false;
                 }
                 for (GUIPage crumb : store.getManager(PlayerManager.class).getPlayer(player).getCrumb()) {
-                    sender.sendMessage(ChatColor.GREEN + "- " + crumb.getTitle() + " [" + crumb.getClass().getName() + "]");
+                    sender.sendMessage(ChatColor.GREEN + "- " + crumb.getTitle() + " [" + crumb.getClass().getName() + "] [" + crumb.hashCode() + "]");
                 }
                 return false;
             }
@@ -46,7 +46,7 @@ public class CommandStore implements CommandExecutor {
 
         if (args.length > 0 && args[0].equalsIgnoreCase("stack")) {
             for (GUIPage crumb : storePlayer.getCrumb()) {
-                player.sendMessage(ChatColor.GREEN + "- " + crumb.getTitle() + " [" + crumb.getClass().getName() + "]");
+                player.sendMessage(ChatColor.GREEN + "- " + crumb.getTitle() + " [" + crumb.getClass().getName() + "] [" + crumb.hashCode() + "]");
             }
             return false;
         }

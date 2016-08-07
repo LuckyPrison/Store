@@ -33,7 +33,10 @@ public class StandardInventory implements StoreInventory {
     @Override
     public void open()
     {
-        player.player().openInventory(inventory);
+        if (player != null && player.player() != null)
+        {
+            player.player().openInventory(inventory);
+        }
     }
 
     @Override
