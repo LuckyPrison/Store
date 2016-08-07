@@ -39,7 +39,6 @@ public class Store extends JavaPlugin {
         loadCommands();
         Locale.load(this);
         protocol();
-        String foo = "blah " + ChatColor.GREEN;
     }
 
     @Override
@@ -130,11 +129,14 @@ public class Store extends JavaPlugin {
             getLogger().severe(String.format("Process attempted to retrieve Manager of type %s but it was not registered!", type));
             getLogger().severe("Dumping Thread stack!");
             Thread.dumpStack();
-            Manager manager = type.getDeclaredConstructor(Store.class).newInstance();
+            Manager manager = type.getDeclaredConstructor(Store.class).newInstance(this);
             managers.add(manager);
             return (T) manager;
         }
-        catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {}
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+        {
+            e.printStackTrace();
+        }
 
         return null;
     }
